@@ -11,6 +11,8 @@ const Medical = require("../models/Medical")
 const cloudinary = require("./../utils/cloudinary.config")
 const { medicalImageUpload, customerAvatarUpload } = require("../utils/upload")
 const DoctorAppointment = require("../models/DoctorAppointment")
+const Doctor = require("../models/Doctor")
+const Category = require("../models/Category")
 
 
 exports.fetchCustomerDetails = asyncHandler(async (req, res) => {
@@ -312,4 +314,14 @@ exports.findDoctor = asyncHandler(async (req, res) => {
 exports.fetchAllDoctor = asyncHandler(async (req, res) => {
     const result = await Doctor.find()
     return res.json({ message: "Doctor Fetch Success", result })
+})
+
+exports.FetchCategory = asyncHandler(async (req, res) => {
+    const result = await Category.find()
+    return res.json({ message: "Categeory Fetch Success", result })
+})
+exports.fetchDoctorDetails = asyncHandler(async (req, res) => {
+    const { doctorId } = req.params
+    const result = await Doctor.findById(doctorId)
+    return res.json({ messsage: "Fetch Doctor Details Success", result })
 })
