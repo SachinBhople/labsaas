@@ -25,6 +25,7 @@ const MedicalOrder = require("../models/MedicalOrder")
 
 const cloudinary = require("./../utils/cloudinary.config")
 const Doctor = require("../models/Doctor")
+const Category = require("../models/Category")
 
 //TODO: City Admin Start
 
