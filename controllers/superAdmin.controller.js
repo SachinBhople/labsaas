@@ -711,7 +711,11 @@ exports.registerDoctor = asyncHandler(async (req, res) => {
         <p>Use this password for Login ${pass}</p>
         `
         })
-        await Doctor.create({ name, email, degree, mobile, password: hashPass, photo: req.file.filename, category, experience, hospitalContact, hospitalAddress, hospitalName })
+        if (req.file) {
+            const { secure_url } = await cloudinary.uploader.upload(req.file.path)
+            await Customer.findByIdAndUpdate(req.user, { ...query, avatar: secure_url })
+        }
+        await Doctor.create({ name, email, degree, mobile, password: hashPass, photo: secure_url, category, experience, hospitalContact, hospitalAddress, hospitalName })
         return res.json({ messsage: "Doctor Register Success" })
     })
 })

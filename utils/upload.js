@@ -85,13 +85,6 @@ const medicalImageStorage = multer.diskStorage({
 })
 
 const doctorphotoStorage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const dest = "uploads/doctorphoto"
-        if (!fs.existsSync(dest)) {
-            fs.mkdirSync(dest, { recursive: true })
-        }
-        cb(null, dest)
-    },
     filename: (req, file, cb) => {
         const ext = path.extname(file.originalname)
         const fn = uuid() + ext
