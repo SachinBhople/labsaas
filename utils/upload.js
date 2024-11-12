@@ -91,6 +91,14 @@ const doctorphotoStorage = multer.diskStorage({
         cb(null, fn);
     }
 })
+const categoryphotoStorage = multer.diskStorage({
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname)
+        const fn = uuid() + ext
+        cb(null, fn);
+    }
+})
+const categoryphotoupload = multer({ storage: categoryphotoStorage }).single("photo")
 const doctorphotoupload = multer({ storage: doctorphotoStorage }).single("photo")
 const logoUpload = multer({ storage: logoStorage }).single("logo")
 const heroUpload = multer({ storage: heroStorage }).single("hero")
@@ -110,5 +118,6 @@ module.exports = {
     doctorSpecialityUpload,
     medicalImageUpload,
     customerAvatarUpload,
-    doctorphotoupload
+    doctorphotoupload,
+    categoryphotoupload
 } 

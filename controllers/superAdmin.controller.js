@@ -4,7 +4,7 @@ const { checkEmpty } = require("../utils/handleEmpty")
 const CityAdmin = require("../models/CityAdmin")
 const CustomerPackages = require("../models/CustomerPackages")
 const Company = require("../models/Company")
-const { logoUpload, heroUpload, labAvatarUpload, doctorSpecialityUpload, doctorphotoupload } = require("../utils/upload")
+const { logoUpload, heroUpload, labAvatarUpload, doctorSpecialityUpload, doctorphotoupload, categoryphotoupload } = require("../utils/upload")
 const Test = require("../models/Test")
 const bcrypt = require("bcrypt")
 const sendEmail = require("../utils/email")
@@ -637,13 +637,24 @@ exports.getDoctorDetails = asyncHandler(async (req, res) => {
 
 // add Category
 exports.addCategory = asyncHandler(async (req, res) => {
-    const { name, desc } = req.body
-    const { isError, error } = checkEmpty({ name, desc })
-    if (isError) {
-        return res.status(400).json({ messsage: "All Feilds Required", error })
-    }
-    await Category.create({ name, desc })
-    return res.json({ messsage: "addCategory create success" })
+    categoryphotoupload(req, res, async (err) => {
+        if (err) {
+            return res.status(400).json({ message: "multer error" })
+        }
+        const { name, desc } = req.body
+        const { isError, error } = checkEmpty({ name, desc })
+        if (isError) {
+            return res.status(400).json({ messsage: "All Feilds Required", error })
+        }
+        let secure
+        if (req.file) {
+            const { secure_url } = await cloudinary.uploader.upload(req.file.path)
+            secure = secure_url
+        }
+
+        await Category.create({ name, desc, photo: secure_url })
+        return res.json({ messsage: "addCategory create success" })
+    })
 })
 exports.UpdateCategory = asyncHandler(async (req, res) => {
     const { categoryId } = req.params
@@ -711,11 +722,12 @@ exports.registerDoctor = asyncHandler(async (req, res) => {
         <p>Use this password for Login ${pass}</p>
         `
         })
+        let secure
         if (req.file) {
             const { secure_url } = await cloudinary.uploader.upload(req.file.path)
-            await Customer.findByIdAndUpdate(req.user, { ...query, avatar: secure_url })
+            secure = secure_url
         }
-        await Doctor.create({ name, email, degree, mobile, password: hashPass, photo: secure_url, category, experience, hospitalContact, hospitalAddress, hospitalName })
+        await Doctor.create({ name, email, degree, mobile, password: hashPass, photo: secure, category, experience, hospitalContact, hospitalAddress, hospitalName })
         return res.json({ messsage: "Doctor Register Success" })
     })
 })

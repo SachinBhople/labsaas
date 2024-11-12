@@ -9,6 +9,10 @@ const categorySchma = new mongoose.Schema({
         type: String,
         required: true,
     },
+    photo: {
+        type: String,
+        required: true,
+    },
     isDeleted: {
         type: Boolean,
         required: false,
