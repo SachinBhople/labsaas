@@ -369,6 +369,8 @@ exports.deActivateTest = asyncHandler(async (req, res) => {
 
 exports.getAllLabs = asyncHandler(async (req, res) => {
     const result = await Lab.find().populate("package").populate("admin")
+    console.log(result);
+
     return res.json({ messsage: "Lab Fetch Success", result })
 
 })

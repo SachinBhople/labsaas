@@ -273,42 +273,60 @@ exports.bookDoctorAppointment = asyncHandler(async (req, res) => {
 })
 
 
+
 exports.findDoctor = asyncHandler(async (req, res) => {
-    console.log(req.body.search);
+    console.log("Search Value:", req.body.search); // Debugging search value
 
     const searchValue = req.body.search;
-    const result = await Doctor.aggregate([
-        {
-            $lookup: {
-                from: "categories", // The name of the category collection
-                localField: "category",
-                foreignField: "_id",
-                as: "category"
+
+    const regex = new RegExp(searchValue, 'i');
+
+    console.log("Regex:", regex);
+
+    const numericSearchValue = isNaN(searchValue) ? searchValue : Number(searchValue);
+
+    try {
+        const result = await Doctor.aggregate([
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "category"
+                }
+            },
+            {
+                $unwind: "$category"
+            },
+            {
+                $match: {
+                    $or: [
+                        { hospitalName: { $regex: regex } },
+                        { email: { $regex: regex } },
+                        { mobile: { $regex: regex } },
+                        { degree: { $regex: regex } },
+                        { hospitalAddress: { $regex: regex } },
+                        { hospitalContact: { $regex: regex } },
+                        { name: { $regex: regex } },
+                        { "category.name": { $regex: regex } },
+                        { experience: { $eq: numericSearchValue } }
+                    ]
+                }
             }
-        },
-        {
-            $unwind: "$category"
-        },
-        {
-            $match: {
-                $or: [
-                    { hospitalName: searchValue },
-                    { email: searchValue },
-                    { mobile: searchValue },
-                    { degree: searchValue },
-                    { hospitalAddress: searchValue },
-                    { experience: searchValue },
-                    { hospitalContact: searchValue },
-                    { name: searchValue },
-                    { "category.name": searchValue }  // Search by category name
-                ]
-            }
+        ]);
+
+        if (result.length === 0) {
+            console.log("No doctors found with the given search criteria.");
+        } else {
+            console.log("Doctors found:", result);
         }
-    ]);
 
-    console.log(result);
+        res.json({ message: "Find Success", result });
 
-    res.json({ message: "Find Success", result });
+    } catch (error) {
+        console.error("Error occurred while searching for doctors:", error);
+        res.status(500).json({ message: "Internal server error", error });
+    }
 });
 
 exports.fetchAllDoctor = asyncHandler(async (req, res) => {
