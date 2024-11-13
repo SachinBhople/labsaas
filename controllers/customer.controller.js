@@ -13,6 +13,7 @@ const { medicalImageUpload, customerAvatarUpload } = require("../utils/upload")
 const DoctorAppointment = require("../models/DoctorAppointment")
 const Doctor = require("../models/Doctor")
 const Category = require("../models/Category")
+const City = require("../models/City")
 
 
 exports.fetchCustomerDetails = asyncHandler(async (req, res) => {
@@ -342,4 +343,9 @@ exports.fetchDoctorDetails = asyncHandler(async (req, res) => {
     const { doctorId } = req.params
     const result = await Doctor.findById(doctorId)
     return res.json({ messsage: "Fetch Doctor Details Success", result })
+})
+
+exports.getAllCity = asyncHandler(async (req, res) => {
+    const result = await City.find()
+    return res.json({ messsage: "Admin Fetch Successfully", result })
 })

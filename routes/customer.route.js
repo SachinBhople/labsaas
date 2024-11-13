@@ -19,6 +19,7 @@ router
     .post("/add-Medical-Order", customerController.addMedicalOder)
     .post("/find-doctor", customerController.findDoctor)
     .get("/fetch-all-doctor", customerController.fetchAllDoctor)
+    .get("/fetch-all-city", customerController.getAllCity)
     .post("/book-doctor-appointment", customerController.bookDoctorAppointment)
     .get("/fetch-category", customerController.FetchCategory)
     .get("/fetch-doctor-details/:doctorId", customerController.fetchDoctorDetails)
