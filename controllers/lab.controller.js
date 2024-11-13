@@ -145,6 +145,7 @@ exports.assignOrderToEmployee = asyncHandler(async (req, res) => {
 })
 exports.changeAssignOrderToEmployee = asyncHandler(async (req, res) => {
     const { orderId } = req.params
+    // const { employee } = req.body
     const { employee } = req.body
 
     const result = await OrderHistory.findById(orderId)
