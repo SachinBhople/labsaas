@@ -23,5 +23,7 @@ router
     .post("/book-doctor-appointment", customerController.bookDoctorAppointment)
     .get("/fetch-category", customerController.FetchCategory)
     .get("/fetch-doctor-details/:doctorId", customerController.fetchDoctorDetails)
+    .post("/book-doctor-appointment", customerController.bookDoctorAppointment)
+    .get("/fetch-doctor-appointment", customerController.getAppointmentById)
 
 module.exports = router

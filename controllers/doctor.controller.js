@@ -97,3 +97,9 @@ exports.fetchDoctorCity = asyncHandler(async (req, res) => {
     const result = await City.find()
     return res.json({ messsage: "Doctors City Fetch Successfully", result })
 })
+
+exports.FetchAllDocotorAppointment = asyncHandler(async (req, res) => {
+    const result = await DoctorAppointment.findById(req.user).populate("customer").populate("doctor");
+    if (!result) return res.status(404).json({ message: "Appointment not found" });
+    res.status(200).json({ message: "Appointment Fetch Succes" });
+})
