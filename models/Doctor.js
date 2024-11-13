@@ -57,13 +57,15 @@ const docotrSchma = new mongoose.Schema({
         type: String,
     },
     dayTiming: {
-        monday: { type: String },
-        tuesday: { type: String },
-        wednesday: { type: String },
-        thursday: { type: String },
-        friday: { type: String },
-        saturday: { type: String },
-    }
+        // monday: [{ start: Date, end: Date }],
+        monday: [{ start: { type: Date, }, end: { type: Date } }],
+        tuesday: [{ start: { type: Date, }, end: { type: Date } }],
+        wednesday: [{ start: { type: Date, }, end: { type: Date } }],
+        thursday: [{ start: { type: Date, }, end: { type: Date } }],
+        friday: [{ start: { type: Date, }, end: { type: Date } }],
+        saturday: [{ start: { type: Date, }, end: { type: Date } }],
+    },
+
 }, { timestamps: true })
 
 module.exports = mongoose.models.doctor || mongoose.model("doctor", docotrSchma)

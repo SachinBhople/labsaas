@@ -866,6 +866,8 @@ exports.fetchDoctorSpeciality = asyncHandler(async (req, res) => {
 })
 exports.createDoctorCity = asyncHandler(async (req, res) => {
     const { name } = req.body
+    console.log(name);
+
     const result = await City.findOne({ name })
     if (result) {
         return res.status(400).json({ messsage: "City Already Registered", error: "City Already Registered" })
