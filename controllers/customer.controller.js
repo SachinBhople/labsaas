@@ -356,8 +356,9 @@ exports.bookDoctorAppointment = asyncHandler(async (req, res) => {
     res.status(200).json({ message: "book Doctor Appointment success " })
 })
 exports.getAppointmentById = asyncHandler(async (req, res) => {
-    const result = await DoctorAppointment.findById(req.user).populate("customer").populate("doctor");
+    const customerId = req.user
+    const result = await DoctorAppointment.find({ customer: customerId }).populate("customer").populate("doctor");
     if (!result) return res.status(404).json({ message: "Appointment not found" });
-    res.status(200).json({ message: "Appointment Fetch Succes" });
+    res.status(200).json({ message: "Appointment Fetch Succes", result });
 })
 
