@@ -5,6 +5,7 @@ const Doctor = require("../models/Doctor")
 const { heroUpload, doctorphotoupload } = require("../utils/upload")
 const DrFees = require("../models/DrFees")
 const City = require("../models/City")
+const DoctorAppointment = require("../models/DoctorAppointment")
 
 
 // doctor.controller.js
@@ -99,7 +100,11 @@ exports.fetchDoctorCity = asyncHandler(async (req, res) => {
 })
 
 exports.FetchAllDocotorAppointment = asyncHandler(async (req, res) => {
-    const result = await DoctorAppointment.findById(req.user).populate("customer").populate("doctor");
+    console.log(req.user, "ddd");
+    const doctorID = req.user
+    const result = await DoctorAppointment.find({ doctor: doctorID }).populate("customer").populate("doctor");
+    console.log(result);
+
     if (!result) return res.status(404).json({ message: "Appointment not found" });
-    res.status(200).json({ message: "Appointment Fetch Succes" });
+    res.status(200).json({ message: "Appointment Fetch Succes", result });
 })

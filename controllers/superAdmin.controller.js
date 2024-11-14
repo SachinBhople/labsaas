@@ -695,44 +695,119 @@ exports.restoreseDeleteCategory = asyncHandler(async (req, res) => {
 // register doctor
 
 // Doctor CRUD Start
+// exports.registerDoctor = asyncHandler(async (req, res) => {
+//     doctorphotoupload(req, res, async (err) => {
+//         if (err) {
+//             return res.status(400).json({ message: "Multer Error" })
+//         }
+//         const { name, email, degree, photo, mobile, category, experience, hospitalContact, hospitalAddress, hospitalName, dayTiming } = req.body
+//         console.log("dayTiming", dayTiming);
+
+//         const { isError, error } = checkEmpty({ name, email, degree, mobile })
+
+//         if (isError) {
+//             return res.status(400).json({ messsage: "All Feilds Required", error })
+//         }
+//         if (!validator.isEmail(email)) {
+//             return res.status(400).json({ messsage: "Invalid Email", error: "Invalid Email" })
+//         }
+//         if (!validator.isMobilePhone(mobile.toString(), "en-IN")) {
+//             return res.status(400).json({ messsage: "Invalid Mobile", error: "Invalid Mobile" })
+//         }
+//         const result = await Doctor.findOne({ email })
+//         if (result) {
+//             return res.status(400).json({ messsage: "Email Already Exist", error: "Email Already Exist" })
+//         }
+//         const pass = email.slice(0, 4) + mobile.toString().slice(6, 10)
+//         const hashPass = await bcrypt.hash(pass, 10)
+//         await sendEmail({
+//             to: email, subject: "Welcome to Lab SAAS", message: `
+//         <h1>${name},Welcome to Lab SAAS</h1>
+//         <p>Use this password for Login ${pass}</p>
+//         `
+//         })
+
+//         const formattedTiming = Object.keys(dayTiming)
+//             .reduce((acc, day) => {
+//                 // Check if dayTiming[day] is an array before calling map
+//                 if (Array.isArray(dayTiming[day])) {
+//                     acc[day] = dayTiming[day].map(({ open, close }) => ({
+//                         start: open ? new Date(`1970-01-01T${open}:00`) : new Date('1970-01-01T00:00:00'),
+//                         end: close ? new Date(`1970-01-01T${close}:00`) : new Date('1970-01-01T00:00:00'),
+//                     }));
+//                 } else {
+//                     // Handle cases where dayTiming[day] is not an array
+//                     acc[day] = [];
+//                 }
+//                 return acc;
+//             }, {});
+
+//         console.log(formattedTiming, "formattedTiming");
+
+//         let secure
+//         if (req.file) {
+//             const { secure_url } = await cloudinary.uploader.upload(req.file.path)
+//             secure = secure_url
+//         }
+//         await Doctor.create({ name, email, degree, mobile, password: hashPass, photo: secure, category, experience, hospitalContact, hospitalAddress, hospitalName, dayTiming: formattedTiming })
+//         return res.json({ messsage: "Doctor Register Success" })
+//     })
+// })
+
 exports.registerDoctor = asyncHandler(async (req, res) => {
     doctorphotoupload(req, res, async (err) => {
         if (err) {
-            return res.status(400).json({ message: "Multer Error" })
+            return res.status(400).json({ message: "Multer Error" });
         }
-        const { name, email, degree, photo, mobile, category, experience, hospitalContact, hospitalAddress, hospitalName } = req.body
-        const { isError, error } = checkEmpty({ name, email, degree, mobile })
+        const { name, email, degree, photo, mobile, category, experience, hospitalContact, hospitalAddress, hospitalName, dayTiming } = req.body;
+
+        const { isError, error } = checkEmpty({ name, email, degree, mobile });
 
         if (isError) {
-            return res.status(400).json({ messsage: "All Feilds Required", error })
+            return res.status(400).json({ message: "All Fields Required", error });
         }
         if (!validator.isEmail(email)) {
-            return res.status(400).json({ messsage: "Invalid Email", error: "Invalid Email" })
+            return res.status(400).json({ message: "Invalid Email", error: "Invalid Email" });
         }
         if (!validator.isMobilePhone(mobile.toString(), "en-IN")) {
-            return res.status(400).json({ messsage: "Invalid Mobile", error: "Invalid Mobile" })
+            return res.status(400).json({ message: "Invalid Mobile", error: "Invalid Mobile" });
         }
-        const result = await Doctor.findOne({ email })
+        const result = await Doctor.findOne({ email });
         if (result) {
-            return res.status(400).json({ messsage: "Email Already Exist", error: "Email Already Exist" })
+            return res.status(400).json({ message: "Email Already Exists", error: "Email Already Exists" });
         }
-        const pass = email.slice(0, 4) + mobile.toString().slice(6, 10)
-        const hashPass = await bcrypt.hash(pass, 10)
+        const pass = email.slice(0, 4) + mobile.toString().slice(6, 10);
+        const hashPass = await bcrypt.hash(pass, 10);
         await sendEmail({
             to: email, subject: "Welcome to Lab SAAS", message: `
-        <h1>${name},Welcome to Lab SAAS</h1>
-        <p>Use this password for Login ${pass}</p>
+        <h1>${name}, Welcome to Lab SAAS</h1>
+        <p>Use this password for Login: ${pass}</p>
         `
-        })
-        let secure
+        });
+        console.log(req.body, "DDDDDDDDDDDDDDDDDDDD");
+
+        let parsedata = JSON.parse(dayTiming)
+        console.log(parsedata);
+        // console.log(dayTiming[1]);
+
+
+        let secure;
         if (req.file) {
-            const { secure_url } = await cloudinary.uploader.upload(req.file.path)
-            secure = secure_url
+            const { secure_url } = await cloudinary.uploader.upload(req.file.path);
+            secure = secure_url;
         }
-        await Doctor.create({ name, email, degree, mobile, password: hashPass, photo: secure, category, experience, hospitalContact, hospitalAddress, hospitalName })
-        return res.json({ messsage: "Doctor Register Success" })
-    })
-})
+
+        // Create the doctor document with the processed data
+        await Doctor.create({
+            name, email, degree, mobile, password: hashPass, photo: secure, category, experience,
+            hospitalContact, hospitalAddress, hospitalName, dayTiming: parsedata
+        })
+
+        return res.json({ message: "Doctor Registered Successfully" });
+    });
+});
+
+
 exports.deleteDoctor = asyncHandler(async (req, res) => {
     const { doctorId } = req.params
     const { isError, error } = checkEmpty({ doctorId })

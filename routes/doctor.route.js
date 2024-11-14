@@ -12,5 +12,6 @@ router
     .delete("/delete-drFees/:drFeesId", doctor.deleteFees)
 
     .get("/fetch-doctors-city", doctor.fetchDoctorCity)
+    .get("/fetch-doctors-appointment", doctor.FetchAllDocotorAppointment)
 
 module.exports = router

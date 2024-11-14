@@ -13,6 +13,7 @@ const { OAuth2Client } = require("google-auth-library")
 const Customer = require("../models/Customer")
 const Doctor = require("../models/Doctor")
 const Medical = require("../models/Medical")
+const DoctorAppointment = require("../models/DoctorAppointment")
 
 
 
@@ -176,6 +177,14 @@ exports.loginCustomer = asyncHandler(async (req, res) => {
             error: " Invalid Credentials"
         })
     }
+
+    // Find the last appointment's address if it exists
+    const lastAppointment = await DoctorAppointment.findOne({ customer: isFound._id })
+        .sort({ createdAt: -1 })
+        .select("address")
+        .lean();
+
+    const lastAddress = lastAppointment ? lastAppointment.address : null;
     const token = jwt.sign({ userId: isFound._id },
         process.env.JWT_KEY,
         { expiresIn: process.env.JWT_CITY_ADMIN_EXPIRE })
@@ -186,11 +195,13 @@ exports.loginCustomer = asyncHandler(async (req, res) => {
         secure: process.env.NODE_ENV === "production"
     })
 
+
     res.json({
         message: "Login Success", result: {
             _id: isFound._id,
             mobile: isFound.mobile,
             role: isFound.role,
+            lastAddress
 
         }
     })
@@ -234,6 +245,8 @@ exports.loginCityAdmin = asyncHandler(async (req, res) => {
             error: " Invalid Credentials"
         })
     }
+
+
     const token = jwt.sign({ userId: isFound._id },
         process.env.JWT_KEY,
         { expiresIn: process.env.JWT_CITY_ADMIN_EXPIRE })
@@ -401,7 +414,14 @@ exports.continueWithGoogle = asyncHandler(async (req, res) => {
         const token = jwt.sign({ userId: result._id },
             process.env.JWT_KEY,
         )
+        // Find the last appointment's address if it exists
+        const lastAppointment = await DoctorAppointment.findOne({ customer: result._id })
+            .sort({ createdAt: -1 })
+            .select("address")
+            .lean();
 
+        const lastAddress = lastAppointment ? lastAppointment.address : null;
+        console.log(lastAddress);
         res.cookie("customer", token, {
             httpOnly: true,
             maxAge: process.env.CITY_ADMIN_COOKIE_EXPIRE,
@@ -415,6 +435,7 @@ exports.continueWithGoogle = asyncHandler(async (req, res) => {
                 name: result.name,
                 mobile: result.mobile,
                 role: result.role,
+                lastAddress
             }
 
         })
