@@ -331,7 +331,7 @@ exports.findDoctor = asyncHandler(async (req, res) => {
 });
 
 exports.fetchAllDoctor = asyncHandler(async (req, res) => {
-    const result = await Doctor.find()
+    const result = await Doctor.find().populate("category")
     return res.json({ message: "Doctor Fetch Success", result })
 })
 
