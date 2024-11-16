@@ -26,4 +26,8 @@ router
     .post("/book-doctor-appointment", customerController.bookDoctorAppointment)
     .get("/fetch-doctor-appointment", customerController.getAppointmentById)
 
+    //prfofle
+    .get("/fetch-customer-profile", customerController.getCustomerProfile)
+
+
 module.exports = router

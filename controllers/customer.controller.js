@@ -363,4 +363,12 @@ exports.getAppointmentById = asyncHandler(async (req, res) => {
     if (!result) return res.status(404).json({ message: "Appointment not found" });
     res.status(200).json({ message: "Appointment Fetch Succes", result });
 })
+exports.getCustomerProfile = asyncHandler(async (req, res) => {
+    const customerId = req.user
+    const result = await Customer.findOne({ _id: customerId })
+    if (!result) return res.status(404).json({ message: "Proifil not found" });
+    res.status(200).json({ message: "Appointment Fetch Succes", result });
+})
+
+
 
