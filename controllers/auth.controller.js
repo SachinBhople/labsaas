@@ -134,13 +134,13 @@ exports.verifySuperAdminOTP = asyncHandler(async (req, res) => {
 
 
 //WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
-exports.registerCustomer = asyncHandler(async (req, res) => {
-    const { mobile, password } = req.body
-    const hashPass = await bcrypt.hash(password, 10)
-    await Customer.create({ mobile, password: hashPass })
-    return res.json({ messsage: "Customer Register Success" })
+// exports.registerCustomer = asyncHandler(async (req, res) => {
+//     const { mobile, password } = req.body
+//     const hashPass = await bcrypt.hash(password, 10)
+//     await Customer.create({ mobile, password: hashPass })
+//     return res.json({ messsage: "Customer Register Success" })
 
-})
+// })
 exports.loginCustomer = asyncHandler(async (req, res) => {
     const { mobile, password } = req.body
     console.log(req.body);
@@ -206,6 +206,116 @@ exports.loginCustomer = asyncHandler(async (req, res) => {
         }
     })
 })
+
+exports.registerCustomer = asyncHandler(async (req, res) => {
+    const { mobile, } = req.body
+    const { isError, error } = checkEmpty({ mobile })
+    if (isError) {
+        return res.status(400).json({ message: "All Fields Required", error })
+    }
+    const isFound = await Customer.findOne({ mobile })
+    if (isFound) {
+        const otp = nanoid(6)
+        await Customer.findByIdAndUpdate(isFound._id, { otp })
+        return res.json({ messsage: "Customer Login Success, OTP Send To Registered Mobile" })
+    } else {
+        const otp = nanoid(6)
+        await Customer.create({ mobile, otp })
+        return res.json({ messsage: "Customer Register Success,OTP Send To Registered Mobile" })
+    }
+})
+exports.verifyOTP = asyncHandler(async (req, res) => {
+    const { mobile, otp } = req.body
+    console.log(req.body);
+
+    const { isError, error } = checkEmpty({ mobile, otp })
+    if (isError) {
+        return res.status(400).json({ messsage: "All Feilds Required", error })
+    }
+    if (!validator.isMobilePhone(mobile.toString(), "en-IN")) {
+        return res.status(400).json({
+            messsage: "Invalid Email Or Mobile",
+            error: "Invalid Email Or Mobile"
+        })
+    }
+    const isFound = await Customer.findOne({ mobile })
+    console.log(isFound);
+
+    if (!isFound) {
+        return res.status(400).json({
+            messsage: "  Mobile is not Found",
+            error: "  Mobile is not Found"
+        })
+    }
+    // const verify = await bcrypt.compare(password, isFound.password)
+    // if (!verify) {
+    //     await sendEmail({
+    //         to: process.env.FROM_EMAIL,
+    //         subject: "Login Attempt Failed",
+    //         message: 'Some one Tried to login'
+    //     })
+    //     return res.status(400).json({
+    //         messsage: " Invalid Credentials",
+    //         error: " Invalid Credentials"
+    //     })
+    // }
+    if (otp !== isFound.otp) {
+        return res.status(400).json({ message: "Invalid OTP" })
+    }
+    const token = jwt.sign({ userId: isFound._id },
+        process.env.JWT_KEY,
+        { expiresIn: process.env.JWT_CITY_ADMIN_EXPIRE })
+
+    res.cookie("customer", token, {
+        httpOnly: true,
+        maxAge: process.env.CITY_ADMIN_COOKIE_EXPIRE,
+        secure: process.env.NODE_ENV === "production"
+    })
+
+    res.json({
+        message: "OTP Verify Success", result: {
+            _id: isFound._id,
+            mobile: isFound.mobile,
+            role: isFound.role,
+
+        }
+    })
+})
+exports.updateCustomerData = asyncHandler(async (req, res) => {
+    const { name, email, address, city } = req.body     // address , city,  
+    const { id } = req.params
+    const { isError, error } = checkEmpty({ name, email, address, city })
+    if (isError) {
+        return res.status(400).json({ message: "All Fields Required", error })
+    }
+    if (!validator.isEmail(email)) {
+        return res.status(400).json({
+            messsage: "Invalid Email Or Mobile",
+            error: "Invalid Email Or Mobile"
+        })
+    }
+    await Customer.findByIdAndUpdate(id, { name, email, address, city })
+    return res.status(200).json({ message: "Customer Data Updated", })
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW

@@ -24,12 +24,12 @@ const customerSchema = new mongoose.Schema({
     avatar: {
         type: String,
     },
-    // location: {
-    //     type: String,
-    // },
-    // city: {
-    //     type: String,
-    // },
+    address: {
+        type: String,
+    },
+    city: {
+        type: String,
+    },
     active: {
         type: Boolean,
         default: true

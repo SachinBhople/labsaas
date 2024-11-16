@@ -4,6 +4,8 @@ const authController = require("./../controllers/auth.controller")
 router
     .post("/super-admin/register", authController.registerSuperAdmin)
     .post("/customer/register", authController.registerCustomer)
+    .post("/customer/verify-otp", authController.verifyOTP)
+    .put("/customer/update-profile/:id", authController.updateCustomerData)
     .post("/customer/login", authController.loginCustomer)
     .post("/super-admin/login", authController.loginSuperAdmin)
     .post("/super-admin/verify-otp", authController.verifySuperAdminOTP)
