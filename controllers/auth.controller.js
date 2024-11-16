@@ -262,6 +262,13 @@ exports.verifyOTP = asyncHandler(async (req, res) => {
     if (otp !== isFound.otp) {
         return res.status(400).json({ message: "Invalid OTP" })
     }
+
+    const lastAppointment = await DoctorAppointment.findOne({ customer: isFound._id })
+        .sort({ createdAt: -1 })
+        .select("address")
+        .lean();
+
+    const lastAddress = lastAppointment ? lastAppointment.address : null;
     const token = jwt.sign({ userId: isFound._id },
         process.env.JWT_KEY,
         { expiresIn: process.env.JWT_CITY_ADMIN_EXPIRE })
@@ -277,6 +284,7 @@ exports.verifyOTP = asyncHandler(async (req, res) => {
             _id: isFound._id,
             mobile: isFound.mobile,
             role: isFound.role,
+            lastAddress
 
         }
     })
