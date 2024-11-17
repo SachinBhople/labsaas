@@ -56,14 +56,20 @@ const docotrSchma = new mongoose.Schema({
     blockReason: {
         type: String,
     },
+    // monday: [{ start: Date, end: Date }],
     dayTiming: {
-        // monday: [{ start: Date, end: Date }],
-        monday: [{ start: { type: String, }, end: { type: String } }],
-        tuesday: [{ start: { type: String, }, end: { type: String } }],
-        wednesday: [{ start: { type: String, }, end: { type: String } }],
-        thursday: [{ start: { type: String, }, end: { type: String } }],
-        friday: [{ start: { type: String, }, end: { type: String } }],
-        saturday: [{ start: { type: String, }, end: { type: String } }],
+        monday: [{ start: { type: Date, }, end: { type: Date } }],
+        tuesday: [{ start: { type: Date, }, end: { type: Date } }],
+        wednesday: [{ start: { type: Date, }, end: { type: Date } }],
+        thursday: [{ start: { type: Date, }, end: { type: Date } }],
+        friday: [{ start: { type: Date, }, end: { type: Date } }],
+        saturday: [{ start: { type: Date, }, end: { type: Date } }],
+        // monday: [{ start: { type: String, }, end: { type: String } }],
+        // tuesday: [{ start: { type: String, }, end: { type: String } }],
+        // wednesday: [{ start: { type: String, }, end: { type: String } }],
+        // thursday: [{ start: { type: String, }, end: { type: String } }],
+        // friday: [{ start: { type: String, }, end: { type: String } }],
+        // saturday: [{ start: { type: String, }, end: { type: String } }],
     },
 
 }, { timestamps: true })

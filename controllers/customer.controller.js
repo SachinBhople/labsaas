@@ -354,8 +354,8 @@ exports.bookDoctorAppointment = asyncHandler(async (req, res) => {
     const { doctor, address, cancleReason, schedule, time, payment } = req.body
     console.log(req.user, "req.user boook Appointment");
 
-    await DoctorAppointment.create({ customer: req.user, doctor, address, cancleReason, schedule, time, payment })
-    res.status(200).json({ message: "book Doctor Appointment success " })
+    const result = await DoctorAppointment.create({ customer: req.user, doctor, address, cancleReason, schedule, time, payment })
+    res.status(200).json({ message: "book Doctor Appointment success ", result })
 })
 exports.getAppointmentById = asyncHandler(async (req, res) => {
     const customerId = req.user
