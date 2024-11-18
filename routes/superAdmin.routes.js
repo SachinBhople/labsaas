@@ -114,6 +114,17 @@ router
     .get("/fetch-SuperMedicalDeatils", superAdmin.getAllSuperMedicalDeatils)
     .get("/fetch-unblockMedical", superAdmin.unblockMedical)
     .put("/fetch-blockMedical", superAdmin.blockMedical)
+    // customer
+    // .get("/fetch-all-appointments", superAdmin.fetchAllAppointmnets)
+    .post("/fetch-all-appointments", superAdmin.fetchAllAppointmnets)
+    .get("/fetch-appointments", superAdmin.fetchAppointments)
+
+
+    // ambulance
+    .post("/register-ambulance", superAdmin.registerAmbulance)
+    .post("/add-ambulance-specility", superAdmin.addAmbulanceSpecility)
+
+
 
 module.exports = router
 

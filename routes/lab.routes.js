@@ -19,3 +19,20 @@ router
     .put("/change-assign-employee/:orderId", lab.changeAssignOrderToEmployee)
 //
 module.exports = router
+
+
+// dirver name
+// driver mobile no
+// driver email id
+// gadi no
+// location
+// hosptil data => name
+// isAvailabe
+//  isacitve
+// isdeleted
+// holidays unAvalibe  =[] // not visiable entry
+//
+
+
+
+// superadmin sockets add

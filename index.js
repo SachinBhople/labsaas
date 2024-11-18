@@ -30,12 +30,13 @@ app.use("/api/v1/employee", employeeProtected, require("./routes/employee.route"
 app.use("/api/v1/customer", customerProtected, require("./routes/customer.route"))
 app.use("/api/v1/medical", medicalProtected, require("./routes/medical.route"))
 app.use("/api/v1/doctor", doctorProtected, require("./routes/doctor.route"))
+app.use("/api/v1/ambulancedriver", require("./routes/ambulanceDriver.routes"))
 
 app.use("*", (req, res) => {
     res.status(404).json({ message: "resource not found" })
 });
 app.use((err, req, res, next) => {
-    console.log(err);
+    // console.log(err);
     res.status(500).json({ message: err.message || "something went wrong" })
 });
 

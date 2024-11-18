@@ -26,6 +26,9 @@ const MedicalOrder = require("../models/MedicalOrder")
 const cloudinary = require("./../utils/cloudinary.config")
 const Doctor = require("../models/Doctor")
 const Category = require("../models/Category")
+const DoctorAppointment = require("../models/DoctorAppointment")
+const Ambulance = require("../models/Ambulance")
+const AmbulanceSpeciality = require("../models/AmbulanceSpeciality")
 
 //TODO: City Admin Start
 
@@ -994,4 +997,117 @@ exports.unblockMedical = asyncHandler(async (req, res) => {
 
 // CRUD medical
 
-//TODO: Medical end 
+//TODO: Medical end
+
+
+//  fetch all appointmnet
+
+// exports.fetchAllAppointmnets = asyncHandler(async (req, res) => {
+//     // const result = await DoctorAppointment.find().populate("customer").populate("doctor").sort({ createdAt: -1 })
+//     // console.log(result);
+//     const searchValue = req.body.search;
+//     console.log(searchValue);
+
+//     const regex = new RegExp(searchValue, 'i');
+
+//     console.log(regex);
+
+//     const result = await DoctorAppointment.aggregate([
+//         {
+//             $match: {
+//                 $or: [
+//                     { createdAt: { $regex: regex } },
+//                     { address: { $regex: regex } },
+//                 ]
+//             }
+//         },
+
+//     ])
+//     console.log(result);
+
+//     res.status(200).json({ message: " All Appointmnet Fetch success", result })
+// })
+// exports.fetchAllAppointmnets = asyncHandler(async (req, res) => {
+//     const { search } = req.body
+//     const result = await DoctorAppointment.find({ "createdAt": { "$gte": new Date(2012, 7, 14), "$lt": new Date(2012, 7, 15) } })
+
+//     res.status(200).json({ message: " All Appointmnet Fetch success", result })
+// })
+
+
+
+exports.fetchAllAppointmnets = asyncHandler(async (req, res) => {
+    const { search } = req.body;
+
+    if (!search) {
+        return res.status(400).json({ message: "Search date is required" });
+    }
+
+    // Parse the search date
+    const searchDate = new Date(search);
+
+    // Set the start of the day (00:00:00.000Z)
+    const startOfDay = new Date(searchDate.setUTCHours(0, 0, 0, 0));
+    console.log(startOfDay);
+
+    // Set the end of the day (23:59:59.999Z)
+    const endOfDay = new Date(searchDate.setUTCHours(23, 59, 59, 999));
+    console.log(endOfDay);
+
+    try {
+        // Query for appointments created on the specific date
+        const result = await DoctorAppointment.find({
+            createdAt: { $gte: startOfDay, $lt: endOfDay }
+        }).populate("customer").populate("customer");
+
+        res.status(200).json({ message: "Appointments fetched successfully", result });
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching appointments", error });
+    }
+});
+
+exports.fetchAppointments = asyncHandler(async (req, res) => {
+    const result = await DoctorAppointment.find()
+    res.status(200).json({ message: "all Appointment fetch success", result })
+})
+
+//  ambulance
+exports.registerAmbulance = asyncHandler(async (req, res) => {
+    const { ownername, mobile, email, price, speciality, vehicleRc, vehicleNo } = req.body
+    const { isError, error } = checkEmpty({ ownername, mobile, email })
+
+    if (isError) {
+        return res.status(400).json({ messsage: "All Feilds Required", error })
+    }
+    if (!validator.isEmail(email)) {
+        return res.status(400).json({ messsage: "Invalid Email", error: "Invalid Email" })
+    }
+    if (!validator.isMobilePhone(mobile.toString(), "en-IN")) {
+        return res.status(400).json({ messsage: "Invalid Mobile", error: "Invalid Mobile" })
+    }
+    const result = await Ambulance.findOne({ email })
+    if (result) {
+        return res.status(400).json({ messsage: "Email Already Exist", error: "Email Already Exist" })
+    }
+    console.log("ddd");
+
+    const pass = email.slice(0, 4) + mobile.toString().slice(6, 10)
+    const hashPass = await bcrypt.hash(pass, 10)
+    await sendEmail({
+        to: email, subject: "Welcome to Lab SAAS", message: `
+    <h1>${name},Welcome to Lab SAAS</h1>
+    <p>Use this password for Login ${pass}</p>
+    `
+
+    })
+    await Ambulance.create({ ownername, mobile, email, password: hashPass })
+    return res.json({ messsage: "Ambulance Create Success" })
+
+})
+
+
+exports.addAmbulanceSpecility = asyncHandler(async (req, res) => {
+    const { name } = req.body
+    await AmbulanceSpeciality.create({ name })
+    res.status(200).json({ message: "Add Ambulance Specility success", })
+})

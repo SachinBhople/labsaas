@@ -1,0 +1,98 @@
+const asyncHandler = require("express-async-handler")
+const { checkEmpty } = require("../utils/handleEmpty")
+const { nanoid } = require("nanoid")
+const AmbulanceDriver = require("../models/AmbulanceDriver")
+const validator = require("validator")
+const jwt = require("jsonwebtoken")
+
+exports.registerAmbulanceDriver = asyncHandler(async (req, res) => {
+    const { mobile, } = req.body
+    console.log(req.body, "dddd");
+
+    const { isError, error } = checkEmpty({ mobile })
+    if (isError) {
+        return res.status(400).json({ message: "All Fields Required", error })
+    }
+    const isFound = await AmbulanceDriver.findOne({ mobile })
+
+    console.log("Dref");
+    console.log(isFound);
+
+    if (isFound) {
+        const otp = nanoid(6)
+        await AmbulanceDriver.findByIdAndUpdate(isFound._id, { otp })
+        console.log("true");
+        return res.status(200).json({ messsage: "Customer Login Success, OTP Send To Registered Mobile" })
+    } else {
+        console.log("flase");
+        const otp = nanoid(6)
+        console.log("flase");
+        // await AmbulanceDriver.create({ mobile, otp })
+        await AmbulanceDriver.create({ mobile, otp })
+        return res.status(200).json({ messsage: "Customer Register Success,OTP Send To Registered Mobile" })
+    }
+})
+
+
+exports.verifyOTP = asyncHandler(async (req, res) => {
+    const { mobile, otp } = req.body
+    console.log(req.body);
+
+    const { isError, error } = checkEmpty({ mobile, otp })
+    if (isError) {
+        return res.status(400).json({ messsage: "All Feilds Required", error })
+    }
+    if (!validator.isMobilePhone(mobile.toString(), "en-IN")) {
+        return res.status(400).json({
+            messsage: "Invalid Email Or Mobile",
+            error: "Invalid Email Or Mobile"
+        })
+    }
+    const isFound = await AmbulanceDriver.findOne({ mobile })
+    console.log(isFound);
+
+    if (!isFound) {
+        return res.status(400).json({
+            messsage: "  Mobile is not Found",
+            error: "  Mobile is not Found"
+        })
+    }
+    if (otp !== isFound.otp) {
+        return res.status(400).json({ message: "Invalid OTP" })
+    }
+    const token = jwt.sign({ userId: isFound._id },
+        process.env.JWT_KEY,
+        { expiresIn: process.env.JWT_CITY_ADMIN_EXPIRE })
+
+    res.cookie("ambulanceDrvier", token, {
+        httpOnly: true,
+        maxAge: process.env.CITY_ADMIN_COOKIE_EXPIRE,
+        secure: process.env.NODE_ENV === "production"
+    })
+
+    res.json({
+        message: "OTP Verify Success", result: {
+            _id: isFound._id,
+            mobile: isFound.mobile,
+
+        }
+    })
+})
+exports.updateAmbulanceDriverProfile = asyncHandler(async (req, res) => {
+    const { name, email, mobile, isAvailabe, drivingLicence, vehicleNo, hodlidays, otp } = req.body     // address , city,  
+    const { id } = req.params
+    const { isError, error } = checkEmpty({ vehicleNo })
+    if (isError) {
+        return res.status(400).json({ message: "All Fields Required", error })
+    }
+
+
+    if (!validator.isEmail(email)) {
+        return res.status(400).json({
+            messsage: "Invalid Email Or Mobile",
+            error: "Invalid Email Or Mobile"
+        })
+    }
+    await AmbulanceDriver.findByIdAndUpdate(id, { name, email, isAvailabe, mobile, drivingLicence, vehicleNo, hodlidays })
+    return res.status(200).json({ message: "ambulance Data Updated", })
+})

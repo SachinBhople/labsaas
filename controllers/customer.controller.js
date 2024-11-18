@@ -262,7 +262,7 @@ exports.bookDoctorAppointment = asyncHandler(async (req, res) => {
     const { doctorId, schedule, time, address } = req.body
     const customerId = req.user
 
-    const appointment = await DoctorAppointment.create({
+    const result = await DoctorAppointment.create({
         customer: customerId,
         doctor: doctorId,
         address: address,
@@ -270,7 +270,7 @@ exports.bookDoctorAppointment = asyncHandler(async (req, res) => {
         time
     })
 
-    res.status(201).json({ message: "Appointment booked successfully", appointment })
+    res.status(201).json({ message: "Appointment booked successfully", result })
 })
 
 
