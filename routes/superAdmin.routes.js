@@ -123,6 +123,8 @@ router
     // ambulance
     .post("/register-ambulance", superAdmin.registerAmbulance)
     .post("/add-ambulance-specility", superAdmin.addAmbulanceSpecility)
+    .get("/fetch-all-ambulance-specility", superAdmin.fetchAllAmbulanceSpecility)
+    .delete("/delete-ambulance-specility", superAdmin.deleteAmulanceSpecility)
 
 
 

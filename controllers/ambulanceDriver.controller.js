@@ -79,7 +79,7 @@ exports.verifyOTP = asyncHandler(async (req, res) => {
     })
 })
 exports.updateAmbulanceDriverProfile = asyncHandler(async (req, res) => {
-    const { name, email, mobile, isAvailabe, drivingLicence, vehicleNo, hodlidays, otp } = req.body     // address , city,  
+    const { name, email, mobile, isAvailabe, drivingLicence, vehicleNo, hodlidays, } = req.body
     const { id } = req.params
     const { isError, error } = checkEmpty({ vehicleNo })
     if (isError) {
@@ -95,4 +95,9 @@ exports.updateAmbulanceDriverProfile = asyncHandler(async (req, res) => {
     }
     await AmbulanceDriver.findByIdAndUpdate(id, { name, email, isAvailabe, mobile, drivingLicence, vehicleNo, hodlidays })
     return res.status(200).json({ message: "ambulance Data Updated", })
+})
+exports.fetchAmbulanceDriverProfile = asyncHandler(async (req, res) => {
+    const ambulancedriverId = req.user
+    const result = await AmbulanceDriver.findOne({ _id: ambulancedriverId })
+    return res.status(200).json({ message: "Ambulance Driver Profile Fetch success", result })
 })

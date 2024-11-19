@@ -100,3 +100,18 @@ exports.medicalProtected = (req, res, next) => {
     })
 
 }
+exports.ambulanceDriverProtected = (req, res, next) => {
+    console.log(req.cookies)
+    const ambulanceDrvier = req.cookies.ambulanceDrvier
+    if (!ambulanceDrvier) {
+        return res.status(401).json({ message: "No cookie found" })
+    }
+    jwt.verify(ambulanceDrvier, process.env.JWT_KEY, (err, decode) => {
+        if (err) {
+            return res.status(500).json({ message: err.message || "Invalid Token" })
+        }
+        req.user = decode.userId
+        next()
+    })
+
+}

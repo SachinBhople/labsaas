@@ -29,6 +29,7 @@ const Category = require("../models/Category")
 const DoctorAppointment = require("../models/DoctorAppointment")
 const Ambulance = require("../models/Ambulance")
 const AmbulanceSpeciality = require("../models/AmbulanceSpeciality")
+const { IdTokenClient } = require("google-auth-library")
 
 //TODO: City Admin Start
 
@@ -1110,4 +1111,21 @@ exports.addAmbulanceSpecility = asyncHandler(async (req, res) => {
     const { name } = req.body
     await AmbulanceSpeciality.create({ name })
     res.status(200).json({ message: "Add Ambulance Specility success", })
+})
+exports.fetchAllAmbulanceSpecility = asyncHandler(async (req, res) => {
+    const result = await AmbulanceSpeciality.find()
+    res.status(200).json({ message: "Add Ambulance Specility success", result })
+})
+
+exports.deleteAmulanceSpecility = asyncHandler(async (req, res) => {
+    const { id } = req.params
+    const { isError, error } = checkEmpty({ id })
+    if (isError) {
+        return res.status(400).json({ messsage: "All Feilds Required", error })
+    }
+    if (!validator.isMongoId(IdTokenClient)) {
+        return res.status(400).json({ messsage: "Invalid Doctor Id", error: "Invalid Doctor Id" })
+    }
+    await Doctor.findByIdAndUpdate(id, { isDeleted: true })
+    return res.json({ messsage: "Doctor Acccount Delete Successful." })
 })
