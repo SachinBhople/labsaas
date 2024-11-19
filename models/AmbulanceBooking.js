@@ -13,7 +13,7 @@ const ambulanceBookingSchma = new mongoose.Schema({
         type: String,
         required: true,
     },
-    Time: {
+    time: {
         type: String,
     },
     hospitalname: {
@@ -28,8 +28,8 @@ const ambulanceBookingSchma = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ["pending", "book", "cancleByDriver", "cancleByCustomer", "other"]
-
+        enum: ["pending", "book", "cancleByDriver", "cancleByCustomer", "other"],
+        default: "pending"
     },
     reason: {
         type: String,

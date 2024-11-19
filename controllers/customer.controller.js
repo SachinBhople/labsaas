@@ -14,6 +14,7 @@ const DoctorAppointment = require("../models/DoctorAppointment")
 const Doctor = require("../models/Doctor")
 const Category = require("../models/Category")
 const City = require("../models/City")
+const AmbulanceBooking = require("../models/AmbulanceBooking")
 
 
 exports.fetchCustomerDetails = asyncHandler(async (req, res) => {
@@ -376,5 +377,15 @@ exports.cancleAmbulanceBookingbyCustomer = asyncHandler(async (req, res) => {
     const customrId = req.user
     await AmbulanceBooking.findByIdAndUpdate(customrId, { status: "cancleByCustomer" })
     return res.json({ messsage: "update Ambulance Facilities success." })
+})
+exports.bookAmbulance = asyncHandler(async (req, res) => {
+    const { isAccept, hospitalname, time, dropoffLocation, pickUpLocation, patientName } = req.body
+    const { isError, error } = checkEmpty({ hospitalname, time, dropoffLocation, pickUpLocation, patientName });
+    if (isError) {
+        return res.status(400).json({ message: "All Fields Required", error });
+    }
+
+    await AmbulanceBooking.create({ hospitalname, time, dropoffLocation, pickUpLocation, patientName })
+    return res.json({ messsage: " Ambulance Book success." })
 })
 
