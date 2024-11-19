@@ -101,3 +101,37 @@ exports.fetchAmbulanceDriverProfile = asyncHandler(async (req, res) => {
     const result = await AmbulanceDriver.findOne({ _id: ambulancedriverId })
     return res.status(200).json({ message: "Ambulance Driver Profile Fetch success", result })
 })
+
+
+exports.fetchDriverBooking = asyncHandler(async (req, res) => {
+    const driverId = req.user
+    const result = await AmbulanceBooking.findById(driverId)
+    res.status(200).json({ message: "Fetch Driver Booking success", result })
+})
+
+
+exports.updateBooking = asyncHandler(async (req, res) => {
+    const driverId = req.user
+    const { isAccept } = req.body
+    await AmbulanceBooking.findByIdAndUpdate(driverId, { isAccept, driverId })
+    return res.json({ messsage: "update Booking  success." })
+})
+exports.DriverIsAvailable = asyncHandler(async (req, res) => {
+    const driverId = req.user
+    const { isAvailabe } = req.body
+    await AmbulanceBooking.findByIdAndUpdate(driverId, { isAvailabe })
+    return res.json({ messsage: "update Ambulance Facilities success." })
+})
+
+exports.fetchBookingHistory = asyncHandler(async (req, res) => {
+    const driverId = req.user
+    const result = await AmbulanceBooking.find({ driverId: driverId })
+    return res.json({ messsage: "update Ambulance Facilities success.", result })
+})
+exports.cancleAmbulanceBookingbyDriver = asyncHandler(async (req, res) => {
+    const driverId = req.user
+    await AmbulanceBooking.findByIdAndUpdate(driverId, { status: "cancleByDriver" })
+    return res.json({ messsage: "update Ambulance Facilities success.", result })
+})
+
+

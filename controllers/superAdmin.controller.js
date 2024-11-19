@@ -30,6 +30,8 @@ const DoctorAppointment = require("../models/DoctorAppointment")
 const Ambulance = require("../models/Ambulance")
 const AmbulanceSpeciality = require("../models/AmbulanceSpeciality")
 const { IdTokenClient } = require("google-auth-library")
+const AmbulanceFacilities = require("../models/AmbulanceFacilities")
+const AmbulanceBooking = require("../models/AmbulanceBooking")
 
 //TODO: City Admin Start
 
@@ -1106,26 +1108,56 @@ exports.registerAmbulance = asyncHandler(async (req, res) => {
 
 })
 
+exports.fetchAllAmbulance = asyncHandler(async (req, res) => {
+    const result = await Ambulance.find()
+    console.log(result, "dddd");
 
-exports.addAmbulanceSpecility = asyncHandler(async (req, res) => {
+    res.status(200).json({ message: "all Appointment fetch success", result })
+})
+
+exports.addAmbulanceFacilities = asyncHandler(async (req, res) => {
     const { name } = req.body
-    await AmbulanceSpeciality.create({ name })
-    res.status(200).json({ message: "Add Ambulance Specility success", })
+    console.log(name);
+
+    await AmbulanceFacilities.create({ name })
+    res.status(200).json({ message: "Add Ambulance Facilities success", })
 })
-exports.fetchAllAmbulanceSpecility = asyncHandler(async (req, res) => {
-    const result = await AmbulanceSpeciality.find()
-    res.status(200).json({ message: "Add Ambulance Specility success", result })
+exports.fetchAllAmbulanceFacilities = asyncHandler(async (req, res) => {
+    const result = await AmbulanceFacilities.find()
+    res.status(200).json({ message: "Add Ambulance Facilities success", result })
 })
 
-exports.deleteAmulanceSpecility = asyncHandler(async (req, res) => {
+exports.deleteAmulanceFacilities = asyncHandler(async (req, res) => {
     const { id } = req.params
     const { isError, error } = checkEmpty({ id })
     if (isError) {
         return res.status(400).json({ messsage: "All Feilds Required", error })
     }
-    if (!validator.isMongoId(IdTokenClient)) {
-        return res.status(400).json({ messsage: "Invalid Doctor Id", error: "Invalid Doctor Id" })
+    await AmbulanceFacilities.findByIdAndUpdate(id, { isDeleted: true })
+    return res.json({ messsage: "Delete Ambulance Facilities success." })
+})
+exports.updateAmulanceFacilities = asyncHandler(async (req, res) => {
+    const { id } = req.params
+    const { name } = req.body
+    console.log(typeof (name));
+    console.log("dd");
+    await AmbulanceFacilities.findByIdAndUpdate(id, { name })
+    return res.json({ messsage: "update Ambulance Facilities success." })
+})
+
+exports.restoreAmbulanceFacilites = asyncHandler(async (req, res) => {
+    const { id } = req.params
+    const { isError, error } = checkEmpty({ id })
+    if (isError) {
+        return res.status(400).json({ messsage: "All Feilds Required", error })
     }
-    await Doctor.findByIdAndUpdate(id, { isDeleted: true })
-    return res.json({ messsage: "Doctor Acccount Delete Successful." })
+    await AmbulanceFacilities.findByIdAndUpdate(id, { isDeleted: false })
+    return res.json({ messsage: "Doctor Acccount Restore Successfully" })
+})
+
+exports.cancleAmbulanceBookingAdmin = asyncHandler(async (req, res) => {
+    const { id } = req.params
+    const { status, reason } = req.body
+    await AmbulanceBooking.findByIdAndUpdate(id, { status, reason })
+    return res.json({ messsage: "update Ambulance Facilities success." })
 })

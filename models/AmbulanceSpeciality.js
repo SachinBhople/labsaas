@@ -1,11 +1,12 @@
-const mongoose = require("mongoose")
+// const mongoose = require("mongoose")
 
-const ambulanceSpecialitySchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-    },
-}, { timestamps: true })
+// const ambulanceSpecialitySchema = new mongoose.Schema({
+//     name: {
+//         type: String,
+//         required: true,
+//     },
+// }, { timestamps: true })
 
-module.exports = mongoose.models.ambulanceSpeciality || mongoose.model("ambulanceSpeciality", ambulanceSpecialitySchema)
+// module.exports = mongoose.models.ambulanceSpeciality || mongoose.model("ambulanceSpeciality", ambulanceSpecialitySchema)
 
+// // faci

@@ -372,3 +372,9 @@ exports.getCustomerProfile = asyncHandler(async (req, res) => {
 
 
 
+exports.cancleAmbulanceBookingbyCustomer = asyncHandler(async (req, res) => {
+    const customrId = req.user
+    await AmbulanceBooking.findByIdAndUpdate(customrId, { status: "cancleByCustomer" })
+    return res.json({ messsage: "update Ambulance Facilities success." })
+})
+

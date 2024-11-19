@@ -122,9 +122,13 @@ router
 
     // ambulance
     .post("/register-ambulance", superAdmin.registerAmbulance)
-    .post("/add-ambulance-specility", superAdmin.addAmbulanceSpecility)
-    .get("/fetch-all-ambulance-specility", superAdmin.fetchAllAmbulanceSpecility)
-    .delete("/delete-ambulance-specility", superAdmin.deleteAmulanceSpecility)
+    .get("/fetch-all-ambulance", superAdmin.fetchAllAmbulance)
+    .post("/add-ambulance-facilities", superAdmin.addAmbulanceFacilities)
+    .get("/fetch-all-ambulance-facilities", superAdmin.fetchAllAmbulanceFacilities)
+    .put("/delete-ambulance-facilities/:id", superAdmin.deleteAmulanceFacilities)
+    .put("/update-ambulance-facilities/:id", superAdmin.updateAmulanceFacilities)
+    .put("/restore-ambulance-facilities/:id", superAdmin.restoreAmbulanceFacilites)
+    .put("/cancel-ambulance-booking/:id", superAdmin.cancleAmbulanceBookingAdmin)
 
 
 

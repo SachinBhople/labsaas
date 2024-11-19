@@ -28,6 +28,7 @@ router
 
     //prfofle
     .get("/fetch-customer-profile", customerController.getCustomerProfile)
+    .put("/cancle-ambulance/:id", customerController.cancleAmbulanceBookingbyCustomer)
 
 
 module.exports = router

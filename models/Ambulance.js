@@ -19,7 +19,7 @@ const ambulanceSchema = new mongoose.Schema({
     vehicleRc: {
         type: String,
     },
-    speciality: {
+    facilities: {
         type: [String],
     },
     price: {
@@ -36,7 +36,7 @@ const ambulanceSchema = new mongoose.Schema({
     },
 }, { timestamps: true })
 
-module.exports = mongoose.models.category || mongoose.model("category", ambulanceSchema)
+module.exports = mongoose.models.ambulance || mongoose.model("ambulance", ambulanceSchema)
 
 // gadi no
 //spacitlyt =[string]
