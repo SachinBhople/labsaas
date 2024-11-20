@@ -133,5 +133,9 @@ exports.cancleAmbulanceBookingbyDriver = asyncHandler(async (req, res) => {
     await AmbulanceBooking.findByIdAndUpdate(driverId, { status: "cancleByDriver" })
     return res.json({ messsage: "update Ambulance Facilities success.", result })
 })
+exports.logoutambulanceDriver = asyncHandler(async (req, res) => {
+    res.clearCookie("ambulanceDrvier")
+    return res.json({ messsage: " Ambulance Driver Logout success.", })
+})
 
 

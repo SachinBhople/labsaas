@@ -1098,14 +1098,21 @@ exports.registerAmbulance = asyncHandler(async (req, res) => {
     const hashPass = await bcrypt.hash(pass, 10)
     await sendEmail({
         to: email, subject: "Welcome to Lab SAAS", message: `
-    <h1>${name},Welcome to Lab SAAS</h1>
+    <h1>${ownername},Welcome to Lab SAAS</h1>
     <p>Use this password for Login ${pass}</p>
     `
 
     })
-    await Ambulance.create({ ownername, mobile, email, password: hashPass })
+    await Ambulance.create({ ownername, mobile, email, password: hashPass, price, vehicleRc, vehicleNo, })
     return res.json({ messsage: "Ambulance Create Success" })
 
+})
+
+exports.updateAmbulance = asyncHandler(async (req, res) => {
+    const { id } = req.params
+    const { price, speciality, vehicleRc, vehicleNo } = req.body
+    await Ambulance.findByIdAndDelete(id, { price, speciality, vehicleRc, vehicleNo })
+    return res.json({ messsage: "Ambulance Update Success" })
 })
 
 exports.fetchAllAmbulance = asyncHandler(async (req, res) => {
