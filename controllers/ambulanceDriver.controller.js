@@ -135,6 +135,7 @@ exports.cancleAmbulanceBookingbyDriver = asyncHandler(async (req, res) => {
 })
 exports.logoutambulanceDriver = asyncHandler(async (req, res) => {
     res.clearCookie("ambulanceDrvier")
+    // res.clearCookie("ambulanceDrvier")
     return res.json({ messsage: " Ambulance Driver Logout success.", })
 })
 
