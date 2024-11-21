@@ -45,6 +45,31 @@ module.exports = mongoose.models.ambulanceDriver || mongoose.model("ambulanceDri
 
 
 
+
+//  start destination  =>  end destination
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // driver  schma
 // dirver name
 // driver mobile no

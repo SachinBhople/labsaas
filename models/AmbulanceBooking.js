@@ -3,7 +3,7 @@ const mongoose = require("mongoose")
 const ambulanceBookingSchma = new mongoose.Schema({
     patientName: {
         type: String,
-        required: true,
+        // required: true,
     },
     pickUpLocation: {
         type: String,

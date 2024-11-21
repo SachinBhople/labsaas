@@ -385,11 +385,15 @@ exports.bookAmbulance = asyncHandler(async (req, res) => {
     if (isError) {
         return res.status(400).json({ message: "All Fields Required", error });
     }
-    await AmbulanceBooking.create({ hospitalname, time, dropoffLocation, pickUpLocation, patientName, date })
+    await AmbulanceBooking.create({ hospitalname, time, dropoffLocation, pickUpLocation, patientName, date, customerId: req.user })
     return res.json({ messsage: " Ambulance Book success." })
 })
 exports.FetchAllAmbulance = asyncHandler(async (req, res) => {
     const result = await Ambulance.find({ isAvailabe: true })
+    return res.json({ messsage: " Ambulance Book success.", result })
+})
+exports.FetchBookedAmbulance = asyncHandler(async (req, res) => {
+    const result = await AmbulanceBooking.find({ customerId: req.user })
     return res.json({ messsage: " Ambulance Book success.", result })
 })
 

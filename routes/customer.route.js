@@ -31,6 +31,7 @@ router
     .put("/cancle-ambulance/:id", customerController.cancleAmbulanceBookingbyCustomer)
     .post("/book-ambulance", customerProtected, customerController.bookAmbulance)
     .get("/fetch-all-ambulance", customerProtected, customerController.FetchAllAmbulance)
+    .get("/fetch-booked-ambulance", customerProtected, customerController.FetchBookedAmbulance)
 
 
 
