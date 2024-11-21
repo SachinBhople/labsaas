@@ -385,6 +385,8 @@ exports.bookAmbulance = asyncHandler(async (req, res) => {
     if (isError) {
         return res.status(400).json({ message: "All Fields Required", error });
     }
+    console.log(req.body);
+
     await AmbulanceBooking.create({ hospitalname, time, dropoffLocation, pickUpLocation, patientName, date, customerId: req.user })
     return res.json({ messsage: " Ambulance Book success." })
 })

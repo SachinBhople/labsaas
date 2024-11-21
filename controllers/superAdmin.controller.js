@@ -32,6 +32,7 @@ const AmbulanceSpeciality = require("../models/AmbulanceSpeciality")
 const { IdTokenClient } = require("google-auth-library")
 const AmbulanceFacilities = require("../models/AmbulanceFacilities")
 const AmbulanceBooking = require("../models/AmbulanceBooking")
+const AmbulanceDriver = require("../models/AmbulanceDriver")
 
 //TODO: City Admin Start
 
@@ -1076,8 +1077,9 @@ exports.fetchAppointments = asyncHandler(async (req, res) => {
 
 //  ambulance
 exports.registerAmbulance = asyncHandler(async (req, res) => {
-    const { ownername, mobile, email, price, facilities, vehicleRc, vehicleNo } = req.body
+    const { ownername, mobile, email, price, facilities, vehicleRc, vehicleNo, driver } = req.body
     const { isError, error } = checkEmpty({ ownername, mobile, email })
+    console.log(req.body);
 
     if (isError) {
         return res.status(400).json({ messsage: "All Feilds Required", error })
@@ -1103,7 +1105,8 @@ exports.registerAmbulance = asyncHandler(async (req, res) => {
     `
 
     })
-    await Ambulance.create({ ownername, mobile, email, password: hashPass, price, vehicleRc, vehicleNo, facilities })
+    await Ambulance.create({ ownername, mobile, email, password: hashPass, price, vehicleRc, vehicleNo, facilities, driver })
+    await AmbulanceDriver.findByIdAndUpdate(driver, { IsassignToAmbulance: true })
     return res.json({ messsage: "Ambulance Create Success" })
 
 })
@@ -1203,4 +1206,9 @@ exports.cancleAmbulanceBookingAdmin = asyncHandler(async (req, res) => {
     const { status, reason } = req.body
     await AmbulanceBooking.findByIdAndUpdate(id, { status, reason })
     return res.json({ messsage: "update Ambulance Facilities success." })
+})
+
+exports.fetchAllambulanceDriver = asyncHandler(async (req, res) => {
+    const result = await AmbulanceDriver.find({ IsassignToAmbulance: false })
+    res.status(200).json({ message: "Add Ambulance Facilities success", result })
 })

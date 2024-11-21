@@ -38,6 +38,10 @@ const ambulancdrivereSchema = new mongoose.Schema({
         type: [String],
         default: false
     },
+    IsassignToAmbulance: {
+        type: Boolean,
+        default: false
+    },
 
 }, { timestamps: true })
 

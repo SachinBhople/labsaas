@@ -16,6 +16,10 @@ const ambulanceSchema = new mongoose.Schema({
     vehicleNo: {
         type: String,
     },
+    driver: {
+        type: mongoose.Types.ObjectId,
+        ref: "ambulanceDriver"
+    },
     vehicleRc: {
         type: String,
     },
