@@ -30,6 +30,8 @@ router
     .get("/fetch-customer-profile", customerController.getCustomerProfile)
     .put("/cancle-ambulance/:id", customerController.cancleAmbulanceBookingbyCustomer)
     .post("/book-ambulance", customerProtected, customerController.bookAmbulance)
+    .get("/fetch-all-ambulance", customerProtected, customerController.FetchAllAmbulance)
+
 
 
 module.exports = router
