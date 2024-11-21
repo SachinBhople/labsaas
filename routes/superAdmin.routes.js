@@ -132,6 +132,7 @@ router
     .put("/update-ambulance-facilities/:id", superAdmin.updateAmulanceFacilities)
     .put("/restore-ambulance-facilities/:id", superAdmin.restoreAmbulanceFacilites)
     .put("/cancel-ambulance-booking/:id", superAdmin.cancleAmbulanceBookingAdmin)
+    .get("/fetch-all-ambulance", superAdmin.fetchAllAmbulance)
 
 
 

@@ -35,6 +35,11 @@ const ambulanceSchema = new mongoose.Schema({
         required: false,
         default: false
     },
+    isAvailabe: {
+        type: Boolean,
+        default: true,
+    },
+
 }, { timestamps: true })
 
 module.exports = mongoose.models.ambulance || mongoose.model("ambulance", ambulanceSchema)
