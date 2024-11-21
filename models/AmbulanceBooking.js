@@ -43,6 +43,10 @@ const ambulanceBookingSchma = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "ambulanceDriver"
     },
+    ambulanceId: {
+        type: mongoose.Types.ObjectId,
+        ref: "ambulance"
+    },
 
 
 }, { timestamps: true })

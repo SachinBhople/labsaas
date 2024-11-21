@@ -31,8 +31,9 @@ const ambulanceSchema = new mongoose.Schema({
         required: false
     },
     active: {
-        type: String,
-        required: false
+        type: Boolean,
+        required: false,
+        default: false
     },
 }, { timestamps: true })
 

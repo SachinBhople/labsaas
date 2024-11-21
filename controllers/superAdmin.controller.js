@@ -1076,7 +1076,7 @@ exports.fetchAppointments = asyncHandler(async (req, res) => {
 
 //  ambulance
 exports.registerAmbulance = asyncHandler(async (req, res) => {
-    const { ownername, mobile, email, price, speciality, vehicleRc, vehicleNo } = req.body
+    const { ownername, mobile, email, price, facilities, vehicleRc, vehicleNo } = req.body
     const { isError, error } = checkEmpty({ ownername, mobile, email })
 
     if (isError) {
@@ -1103,16 +1103,52 @@ exports.registerAmbulance = asyncHandler(async (req, res) => {
     `
 
     })
-    await Ambulance.create({ ownername, mobile, email, password: hashPass, price, vehicleRc, vehicleNo, })
+    await Ambulance.create({ ownername, mobile, email, password: hashPass, price, vehicleRc, vehicleNo, facilities })
     return res.json({ messsage: "Ambulance Create Success" })
 
 })
 
 exports.updateAmbulance = asyncHandler(async (req, res) => {
     const { id } = req.params
-    const { price, speciality, vehicleRc, vehicleNo } = req.body
-    await Ambulance.findByIdAndDelete(id, { price, speciality, vehicleRc, vehicleNo })
+    const { price, speciality, vehicleRc, vehicleNo, facilities } = req.body
+    await Ambulance.findByIdAndUpdate(id, { price, speciality, vehicleRc, vehicleNo, facilities })
     return res.json({ messsage: "Ambulance Update Success" })
+})
+
+
+exports.activateAmbulance = asyncHandler(async (req, res) => {
+    const { id } = req.params
+    const { isError, error } = checkEmpty({ id })
+    if (isError) {
+        return res.status(400).json({ messsage: "All Feilds Required", error })
+    }
+    if (!validator.isMongoId(id)) {
+        return res.status(400).json({ messsage: "Invalid Admin ID", error: "Invalid Doctor ID" })
+    }
+    await Ambulance.findByIdAndUpdate(id, { active: true })
+    return res.json({ messsage: "Doctor Activate Success" })
+})
+exports.deactivateAmbulance = asyncHandler(async (req, res) => {
+    const { id } = req.params
+    const { reason } = req.body
+    const { isError, error } = checkEmpty({ id, reason })
+    if (isError) {
+        return res.status(400).json({ messsage: "All Feilds Required", error })
+    }
+    if (!validator.isMongoId(id)) {
+        return res.status(400).json({ messsage: "Invalid Doctor ID", error: "Invalid Doctor ID" })
+    }
+    const result = await Ambulance.findById(id)
+    await sendEmail({
+        to: result.email,
+        subject: "⚠️ Lab SaaS Account Blocked",
+        message: `Dear , ${result.name}, Your Account is blocked due to ${reason}.
+        Get in Touch with Us to Activate Your Account.`
+    })
+
+    await Ambulance.findByIdAndUpdate(id, { active: false, blockReason: reason })
+
+    return res.json({ messsage: "Doctor De-Activate Success" })
 })
 
 exports.fetchAllAmbulance = asyncHandler(async (req, res) => {
