@@ -121,9 +121,9 @@ exports.updateBooking = asyncHandler(async (req, res) => {
 })
 exports.DriverIsAvailable = asyncHandler(async (req, res) => {
     const driverId = req.user
-    const { isAvailabe } = req.body
-    await AmbulanceBooking.findByIdAndUpdate(driverId, { isAvailabe })
-    return res.json({ messsage: "update Ambulance Facilities success." })
+    const { isAvailable } = req.body
+    await AmbulanceDriver.findByIdAndUpdate(driverId, { isAvailabe: isAvailable })
+    return res.json({ messsage: " Driver Status Update success." })
 })
 
 exports.fetchBookingHistory = asyncHandler(async (req, res) => {
