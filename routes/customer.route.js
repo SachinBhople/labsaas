@@ -32,6 +32,7 @@ router
     .post("/book-ambulance", customerProtected, customerController.bookAmbulance)
     .get("/fetch-all-ambulance", customerProtected, customerController.FetchAllAmbulance)
     .get("/fetch-booked-ambulance", customerProtected, customerController.FetchBookedAmbulance)
+    .get("/fetch-latest-booked-ambulance", customerProtected, customerController.FetchLatestBookedAmbulance)
 
 
 
