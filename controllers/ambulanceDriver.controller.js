@@ -146,7 +146,7 @@ exports.customerrequest = asyncHandler(async (req, res) => {
     if (!isAccept) {
         let dresult = await AmbulanceDriver.find({ isAvailabe: true })
         let driver = dresult[0]
-        await AmbulanceBooking.findByIdAndUpdate(result.id, { driver: driver._id })
+        await AmbulanceBooking.findByIdAndUpdate(result._id, { driver: driver._id })
     }
     res.status(200).json({ message: "Fetch Driver Booking success", result })
 })
