@@ -15,6 +15,7 @@ router
     .get("/fetch-booking-history", ambulanceDriverProtected, ambulanceDriver.fetchBookingHistory)
     .put("/cancle-ambulance-booking", ambulanceDriverProtected, ambulanceDriver.cancleAmbulanceBookingbyDriver)
     .post("/logout-ambulance-driver", ambulanceDriver.logoutambulanceDriver)
+    .get("/fetch-latest-booking", ambulanceDriverProtected, ambulanceDriver.fetchDriverBooking)
     .post("/verify-otp", ambulanceDriver.verifyOTP)
     .post("/customer-request", ambulanceDriverProtected, ambulanceDriver.customerrequest)
 
