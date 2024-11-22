@@ -27,7 +27,7 @@ const ambulanceBookingSchma = new mongoose.Schema({
     },
     isAccept: {
         type: Boolean,
-        default: false
+        // default: false
     },
     status: {
         type: String,
