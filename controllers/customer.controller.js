@@ -380,22 +380,22 @@ exports.cancleAmbulanceBookingbyCustomer = asyncHandler(async (req, res) => {
     return res.json({ messsage: "update Ambulance Facilities success." })
 })
 exports.bookAmbulance = asyncHandler(async (req, res) => {
-    const { isAccept, hospitalname, time, dropoffLocation, pickUpLocation, patientName, date } = req.body
+    const { isAccept, hospitalname, time, dropoffLocation, pickUpLocation, patientName, date, ambulanceId } = req.body
     const { isError, error } = checkEmpty({ hospitalname, time, dropoffLocation, pickUpLocation, patientName });
     if (isError) {
         return res.status(400).json({ message: "All Fields Required", error });
     }
-    console.log(req.body);
+    console.log(req.body); s
 
-    await AmbulanceBooking.create({ hospitalname, time, dropoffLocation, pickUpLocation, patientName, date, customerId: req.user })
+    await AmbulanceBooking.create({ hospitalname, time, dropoffLocation, pickUpLocation, patientName, date, customerId: req.user, ambulanceId })
     return res.json({ messsage: " Ambulance Book success." })
 })
 exports.FetchAllAmbulance = asyncHandler(async (req, res) => {
-    const result = await Ambulance.find({ isAvailabe: true })
+    const result = await Ambulance.find({ isAvailabe: true }).populate("driver")
     return res.json({ messsage: " Ambulance Book success.", result })
 })
 exports.FetchBookedAmbulance = asyncHandler(async (req, res) => {
-    const result = await AmbulanceBooking.find({ customerId: req.user })
+    const result = await AmbulanceBooking.find({ customerId: req.user }).populate("customerId").populate("ambulanceId")
     return res.json({ messsage: " Ambulance Book success.", result })
 })
 
