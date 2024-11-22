@@ -141,7 +141,7 @@ exports.DriverIsAvailable = asyncHandler(async (req, res) => {
 
 exports.fetchBookingHistory = asyncHandler(async (req, res) => {
     const driverId = req.user
-    const result = await AmbulanceBooking.find({ driverId: driverId })
+    const result = await AmbulanceBooking.find({ driverId: driverId }).populate("customerId")
     console.log(result);
     let arr = []
     for (let i = 0; i < result.length; i++) {
