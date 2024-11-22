@@ -380,13 +380,13 @@ exports.cancleAmbulanceBookingbyCustomer = asyncHandler(async (req, res) => {
     return res.json({ messsage: "update Ambulance Facilities success." })
 })
 exports.bookAmbulance = asyncHandler(async (req, res) => {
-    const { isAccept, hospitalname, time, dropoffLocation, pickUpLocation, patientName, date, ambulanceId, driverId } = req.body
-    const { isError, error } = checkEmpty({ hospitalname, time, dropoffLocation, pickUpLocation, patientName, ambulanceId, driverId });
+    const { isAccept, time, dropoffLocation, pickUpLocation, date, ambulanceId, driverId } = req.body
+    const { isError, error } = checkEmpty({ time, dropoffLocation, pickUpLocation, ambulanceId, driverId });
     if (isError) {
         return res.status(400).json({ message: "All Fields Required", error });
     }
 
-    await AmbulanceBooking.create({ hospitalname, time, dropoffLocation, pickUpLocation, patientName, date, customerId: req.user, ambulanceId, driverId })
+    await AmbulanceBooking.create({ time, dropoffLocation, pickUpLocation, date, customerId: req.user, ambulanceId, driverId })
     await Ambulance.findByIdAndUpdate(ambulanceId, { isAvailabe: false })
 
     return res.json({ messsage: " Ambulance Book success." })
