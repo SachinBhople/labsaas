@@ -14,7 +14,7 @@ router
     .put("/ambulance-driver-isavailabe/:id", ambulanceDriverProtected, ambulanceDriver.DriverIsAvailable)
     .get("/fetch-booking-history", ambulanceDriverProtected, ambulanceDriver.fetchBookingHistory)
     .put("/cancle-ambulance-booking", ambulanceDriverProtected, ambulanceDriver.cancleAmbulanceBookingbyDriver)
-    .post("/logout-ambulance-driver", ambulanceDriverProtected, ambulanceDriver.logoutambulanceDriver)
+    .post("/logout-ambulance-driver", ambulanceDriver.logoutambulanceDriver)
 
 
 module.exports = router
