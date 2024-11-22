@@ -16,6 +16,7 @@ router
     .put("/cancle-ambulance-booking", ambulanceDriverProtected, ambulanceDriver.cancleAmbulanceBookingbyDriver)
     .post("/logout-ambulance-driver", ambulanceDriver.logoutambulanceDriver)
     .post("/verify-otp", ambulanceDriver.verifyOTP)
+    .post("/customer-request", ambulanceDriverProtected, ambulanceDriver.customerrequest)
 
 
 module.exports = router
