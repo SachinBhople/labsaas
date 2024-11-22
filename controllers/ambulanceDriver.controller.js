@@ -142,8 +142,10 @@ exports.logoutambulanceDriver = asyncHandler(async (req, res) => {
 
 exports.customerrequest = asyncHandler(async (req, res) => {
     const { isAccept } = req.body
+    console.log(isAccept, "isAccept");
+
     const driverId = req.user
-    const result = await AmbulanceBooking.findById(driverId)
+    const result = await AmbulanceBooking.findOne({ driverId: driverId })
     if (!isAccept) {
         let dresult = await AmbulanceDriver.find({ isAvailabe: true })
         let driver = dresult[0]
