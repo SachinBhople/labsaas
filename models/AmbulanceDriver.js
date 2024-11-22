@@ -36,7 +36,7 @@ const ambulancdrivereSchema = new mongoose.Schema({
     },
     hodlidays: {
         type: [String],
-        default: false
+
     },
     IsassignToAmbulance: {
         type: Boolean,
