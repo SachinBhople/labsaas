@@ -380,7 +380,7 @@ exports.cancleAmbulanceBookingbyCustomer = asyncHandler(async (req, res) => {
     return res.json({ messsage: "update Ambulance Facilities success." })
 })
 exports.bookAmbulance = asyncHandler(async (req, res) => {
-    const { isAccept, hospitalname, time, dropoffLocation, pickUpLocation, patientName, date, ambulanceId } = req.body
+    const { isAccept, hospitalname, time, dropoffLocation, pickUpLocation, patientName, date, ambulanceId, driverId } = req.body
     const { isError, error } = checkEmpty({ hospitalname, time, dropoffLocation, pickUpLocation, patientName, ambulanceId });
     if (isError) {
         return res.status(400).json({ message: "All Fields Required", error });
@@ -392,8 +392,16 @@ exports.bookAmbulance = asyncHandler(async (req, res) => {
     return res.json({ messsage: " Ambulance Book success." })
 })
 exports.FetchAllAmbulance = asyncHandler(async (req, res) => {
-    const result = await Ambulance.find({ isAvailabe: true }).populate("driver")
-    return res.json({ messsage: " Ambulance Book success.", result })
+    const arr = []
+    const result = await Ambulance.find().populate("driver")
+    for (let i = 0; i < result.length; i++) {
+        if (result[i].isAvailabe === true && result[i].driver.isAvailabe === true) {
+            arr.push(result[i])
+        }
+    }
+    console.log(arr);
+
+    return res.json({ messsage: " Ambulance Book success.", result: arr })
 })
 exports.FetchBookedAmbulance = asyncHandler(async (req, res) => {
     const result = await AmbulanceBooking.find({ customerId: req.user }).populate("customerId").populate("ambulanceId")

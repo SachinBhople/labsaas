@@ -106,7 +106,9 @@ exports.fetchAmbulanceDriverProfile = asyncHandler(async (req, res) => {
 
 exports.fetchDriverBooking = asyncHandler(async (req, res) => {
     const driverId = req.user
-    const result = await AmbulanceBooking.findById(driverId)
+    const result = await AmbulanceBooking.find()
+    // const result = await AmbulanceBooking.findById(driverId).sort({ createdAt: -1 })
+    // const result = await AmbulanceBooking.findById(driverId).sort({ createdAt: -1 })
     res.status(200).json({ message: "Fetch Driver Booking success", result })
 })
 

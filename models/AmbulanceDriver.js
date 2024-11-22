@@ -32,7 +32,7 @@ const ambulancdrivereSchema = new mongoose.Schema({
     },
     isAvailabe: {
         type: Boolean,
-        default: false
+        default: true
     },
     hodlidays: {
         type: [String],
