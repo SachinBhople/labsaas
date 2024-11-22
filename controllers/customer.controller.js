@@ -408,13 +408,15 @@ exports.FetchBookedAmbulance = asyncHandler(async (req, res) => {
     return res.json({ messsage: " Ambulance Book success.", result })
 })
 exports.FetchLatestBookedAmbulance = asyncHandler(async (req, res) => {
-    const result = await AmbulanceBooking.find({ customerId: req.user }).populate("customerId").populate("ambulanceId").sort({ createdAt: -1 })
+    const result = await AmbulanceBooking.find({ customerId: req.user }).populate("customerId").populate("ambulanceId").populate("driverId").sort({ createdAt: -1 })
     console.log(result, "resulttt");
 
     let arr = []
     for (let i = 0; i < result.length; i++) {
         if (result[i].isAccept === true) {
+            // const driverData = result[i]
             arr.push(result[i])
+            // arr.push(await driverData.populate("driverId"))
         }
     }
     console.log(arr);
