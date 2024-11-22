@@ -113,9 +113,23 @@ exports.fetchDriverBooking = asyncHandler(async (req, res) => {
 
 
 exports.updateBooking = asyncHandler(async (req, res) => {
-    const driverId = req.user
-    const { isAccept } = req.body
-    await AmbulanceBooking.findByIdAndUpdate(driverId, { isAccept, driverId })
+    const { isAccept, bookingId } = req.body
+    console.log(isAccept, "isAccept");
+    if (!isAccept) {
+        const arr = []
+        const result = await Ambulance.find().populate("driver")
+        console.log(result, "result");
+
+        for (let i = 0; i < result.length; i++) {
+            if (result[i].isAvailabe === true && result[i].driver.isAvailabe === true) {
+                arr.push(result[i])
+            }
+        }
+        console.log(arr, "arr")
+        await AmbulanceBooking.findByIdAndUpdate(bookingId, { driverId: arr[0].driver._id })
+    } else {
+        await AmbulanceBooking.findByIdAndUpdate(bookingId, { isAccept: true })
+    }
     return res.json({ messsage: "update Booking  success." })
 })
 exports.DriverIsAvailable = asyncHandler(async (req, res) => {
