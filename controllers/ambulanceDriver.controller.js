@@ -4,6 +4,7 @@ const { nanoid } = require("nanoid")
 const AmbulanceDriver = require("../models/AmbulanceDriver")
 const validator = require("validator")
 const jwt = require("jsonwebtoken")
+const AmbulanceBooking = require("../models/AmbulanceBooking")
 
 exports.registerAmbulanceDriver = asyncHandler(async (req, res) => {
     const { mobile, } = req.body
