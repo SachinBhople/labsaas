@@ -139,4 +139,13 @@ exports.logoutambulanceDriver = asyncHandler(async (req, res) => {
     return res.json({ messsage: " Ambulance Driver Logout success.", })
 })
 
+exports.fetchDriverBooking = asyncHandler(async (req, res) => {
+    const { isAccept } = req.body
+    const driverId = req.user
+    const result = await AmbulanceBooking.findById(driverId)
+    if (!isAccept) {
+        const d = await AmbulanceDriver.find({ isAvailabe: true })
 
+    }
+    res.status(200).json({ message: "Fetch Driver Booking success", result })
+})
