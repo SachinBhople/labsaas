@@ -5,6 +5,7 @@ const AmbulanceDriver = require("../models/AmbulanceDriver")
 const validator = require("validator")
 const jwt = require("jsonwebtoken")
 const AmbulanceBooking = require("../models/AmbulanceBooking")
+const Ambulance = require("../models/Ambulance")
 
 exports.registerAmbulanceDriver = asyncHandler(async (req, res) => {
     const { mobile, } = req.body
@@ -143,20 +144,37 @@ exports.logoutambulanceDriver = asyncHandler(async (req, res) => {
 })
 
 exports.customerrequest = asyncHandler(async (req, res) => {
-    const { isAccept } = req.body
+    const { isAccept, bookingId } = req.body
     console.log(isAccept, "isAccept");
 
-    const driverId = req.user
-    const result = await AmbulanceBooking.findOne({ driverId: driverId })
     if (!isAccept) {
-        let dresult = await AmbulanceDriver.find({ isAvailabe: true })
-        let driver = dresult[0]
-        console.log(driverId, "driverId");
-        console.log(dresult, "dresult");
-        console.log(driver, "driver");
+        const arr = []
+        const result = await Ambulance.find().populate("driver")
         console.log(result, "result");
 
-        await AmbulanceBooking.findByIdAndUpdate(result._id, { driver: driver._id })
+        for (let i = 0; i < result.length; i++) {
+            if (result[i].isAvailabe === true && result[i].driver.isAvailabe === true) {
+                arr.push(result[i])
+            }
+        }
+        console.log(arr, "arr")
+        await AmbulanceBooking.findByIdAndUpdate(bookingId, { driverId: arr[0].driver._id })
+    } else {
+        await AmbulanceBooking.findByIdAndUpdate(bookingId, { isAccept: true })
     }
-    res.status(200).json({ message: "Fetch Driver Booking success", result })
+    res.status(200).json({ message: "customer request success" })
+
+    // const driverId = req.user
+    // const result = await AmbulanceBooking.find({ driverId: driverId }).sort({ createdAt: -1 })
+    // if (!isAccept) {
+    //     let dresult = await AmbulanceDriver.find({ isAvailabe: true })
+    //     let driver = dresult[0]
+    //     console.log(driverId, "driverId");
+    //     console.log(dresult, "dresult");
+    //     console.log(driver, "driver");
+    //     console.log(result, "result");
+
+    //     await AmbulanceBooking.findByIdAndUpdate(result._id, { driver: driver._id })
+    // }
+
 })
