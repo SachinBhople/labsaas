@@ -143,6 +143,7 @@ exports.fetchBookingHistory = asyncHandler(async (req, res) => {
     const driverId = req.user
     isAccept
     const result = await AmbulanceBooking.find({ driverId: driverId })
+    console.log(result);
     let arr = []
     for (let i = 0; i < result.length; i++) {
         if (result[i].isAccept === true) {
