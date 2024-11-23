@@ -1071,7 +1071,7 @@ exports.fetchAllAppointmnets = asyncHandler(async (req, res) => {
 });
 
 exports.fetchAppointments = asyncHandler(async (req, res) => {
-    const result = await DoctorAppointment.find()
+    const result = await DoctorAppointment.find().populate("doctor").populate("customer")
     res.status(200).json({ message: "all Appointment fetch success", result })
 })
 

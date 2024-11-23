@@ -409,7 +409,7 @@ exports.FetchBookedAmbulance = asyncHandler(async (req, res) => {
 })
 exports.FetchLatestBookedAmbulance = asyncHandler(async (req, res) => {
     const result = await AmbulanceBooking.find({ customerId: req.user }).populate("customerId").populate("ambulanceId").populate("driverId").sort({ createdAt: -1 })
-    console.log(result, "resulttt");
+    // console.log(result, "resulttt");
 
     let arr = []
     for (let i = 0; i < result.length; i++) {
@@ -419,7 +419,7 @@ exports.FetchLatestBookedAmbulance = asyncHandler(async (req, res) => {
             // arr.push(await driverData.populate("driverId"))
         }
     }
-    console.log(arr);
+    console.log(arr[0], "arrrr");
 
     return res.json({ messsage: " Fetch Latest Booked Ambulance success.", result: arr[0] })
 })
