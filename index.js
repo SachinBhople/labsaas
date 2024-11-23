@@ -5,9 +5,10 @@ const dotenv = require("dotenv")
 dotenv.config({ path: "./.env" })
 const mongoose = require("mongoose")
 const { superAdminProtected, cityAdminProtected, labProtected, customerProtected, employeeProtected, medicalProtected, doctorProtected } = require("./middleware/protected")
+const { app, httpServer } = require("./utils/socket")
 mongoose.connect(process.env.MONGO_URL)
 
-const app = express()
+// const app = express()
 app.use(express.json())
 app.use(cookieParser())
 app.use(express.static("uploads"))
@@ -42,5 +43,6 @@ app.use((err, req, res, next) => {
 
 mongoose.connection.once("open", () => {
     console.log("MONGO SERVER RUNNING");
-    app.listen(process.env.PORT, console.log(`http://localhost:${process.env.PORT}`))
+    // app.listen(process.env.PORT, console.log(`http://localhost:${process.env.PORT}`))
+    httpServer.listen(process.env.PORT, console.log(`http://localhost:${process.env.PORT}`))
 });

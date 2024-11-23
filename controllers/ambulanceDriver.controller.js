@@ -6,6 +6,7 @@ const validator = require("validator")
 const jwt = require("jsonwebtoken")
 const AmbulanceBooking = require("../models/AmbulanceBooking")
 const Ambulance = require("../models/Ambulance")
+const { io } = require("../utils/socket")
 
 exports.registerAmbulanceDriver = asyncHandler(async (req, res) => {
     const { mobile, } = req.body
@@ -183,6 +184,9 @@ exports.customerrequest = asyncHandler(async (req, res) => {
     } else {
         await AmbulanceBooking.findByIdAndUpdate(bookingId, { isAccept: true })
     }
+    const result = await AmbulanceBooking.find()
+    io.emit("fetch-ambulance-booking", result)
+
     res.status(200).json({ message: "customer request success" })
 
     // const driverId = req.user
