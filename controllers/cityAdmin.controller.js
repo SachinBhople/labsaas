@@ -9,7 +9,8 @@ const Orders = require("../models/Orders")
 const OrderHistory = require("../models/OrderHistory")
 
 
-//TODO: Lab  CRUD Start
+// TODO: Lab  CRUD Start
+// TODO: Lab  CRUD Start
 
 exports.registerLab = asyncHandler(async (req, res) => {
     const { name, email, mobile, location, city } = req.body
