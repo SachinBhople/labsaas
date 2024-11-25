@@ -18,6 +18,7 @@ router
     .get("/fetch-latest-booking", ambulanceDriverProtected, ambulanceDriver.fetchDriverBooking)
     .post("/verify-otp", ambulanceDriver.verifyOTP)
     .post("/customer-request", ambulanceDriverProtected, ambulanceDriver.customerrequest)
+    .post("/complete-request", ambulanceDriverProtected, ambulanceDriver.completeOrder)
 
 
 module.exports = router

@@ -205,3 +205,16 @@ exports.customerrequest = asyncHandler(async (req, res) => {
     // }
 
 })
+
+
+exports.completeOrder = asyncHandler(async (req, res) => {
+    const driverid = req.user
+    console.log(driverid);
+    if (!driverid) {
+        return res.status(400).json({ message: "no cookies found" })
+    }
+    const result = await Ambulance.findOne({ driver: driverid })
+    console.log(result);
+    await Ambulance.findByIdAndUpdate(result._id, { isAvailabe: true })
+    return res.json({ messsage: "Order Complete success." })
+})
