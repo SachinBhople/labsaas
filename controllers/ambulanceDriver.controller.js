@@ -180,13 +180,15 @@ exports.customerrequest = asyncHandler(async (req, res) => {
             }
         }
         console.log(arr, "arr")
+        if (arr.length === 0) {
+            return res.status(400).json({ message: "No Ambulance Found" })
+        }
         await AmbulanceBooking.findByIdAndUpdate(bookingId, { driverId: arr[0].driver._id })
     } else {
         await AmbulanceBooking.findByIdAndUpdate(bookingId, { isAccept: true })
+        const result = await AmbulanceBooking.find()
+        io.emit("fetch-ambulance-booking", result)
     }
-    const result = await AmbulanceBooking.find()
-    io.emit("fetch-ambulance-booking", result)
-
     res.status(200).json({ message: "customer request success" })
 
     // const driverId = req.user

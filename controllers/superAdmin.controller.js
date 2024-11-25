@@ -375,8 +375,8 @@ exports.deActivateTest = asyncHandler(async (req, res) => {
 //TODO:  FETCH ALL LAB START
 
 exports.getAllLabs = asyncHandler(async (req, res) => {
-    const result = await Lab.find().populate("package").populate("admin")
-    console.log(result);
+    const result = await Lab.find().populate("admin")
+    console.log(result, "get All labs");
 
     return res.json({ messsage: "Lab Fetch Success", result })
 
@@ -516,7 +516,8 @@ exports.deActivateEmployee = asyncHandler(async (req, res) => {
 //TODO:CUSTOMER START
 
 exports.getAllCustomers = asyncHandler(async (req, res) => {
-    const result = await Customer.find().populate("lab")
+    // const result = await Customer.find().populate("lab")
+    const result = await Customer.find()
     return res.json({ messsage: "Fetch All Employee Success", result })
 })
 exports.getCustomerDetails = asyncHandler(async (req, res) => {

@@ -16,6 +16,7 @@ const Category = require("../models/Category")
 const City = require("../models/City")
 const AmbulanceBooking = require("../models/AmbulanceBooking")
 const Ambulance = require("../models/Ambulance")
+const { io } = require("../utils/socket")
 
 
 exports.fetchCustomerDetails = asyncHandler(async (req, res) => {
@@ -379,30 +380,63 @@ exports.cancleAmbulanceBookingbyCustomer = asyncHandler(async (req, res) => {
     await AmbulanceBooking.findByIdAndUpdate(customrId, { status: "cancleByCustomer" })
     return res.json({ messsage: "update Ambulance Facilities success." })
 })
+// exports.bookAmbulance = asyncHandler(async (req, res) => {
+//     const { isAccept, time, dropoffLocation, pickUpLocation, date, ambulanceId, driverId } = req.body
+//     const { isError, error } = checkEmpty({ time, dropoffLocation, pickUpLocation, ambulanceId, driverId });
+//     if (isError) {
+//         return res.status(400).json({ message: "All Fields Required", error });
+//     }
+
+//     await AmbulanceBooking.create({ time, dropoffLocation, pickUpLocation, date, customerId: req.user, ambulanceId, driverId })
+//     await Ambulance.findByIdAndUpdate(ambulanceId, { isAvailabe: false })
+//     const result = await AmbulanceBooking.find()
+//     io.emit("fetch-ambulance-request", result)
+//     return res.json({ messsage: " Ambulance Book success." })
+// })
+// exports.FetchAllAmbulance = asyncHandler(async (req, res) => {
+//     const arr = []
+//     const result = await Ambulance.find().populate("driver")
+//     for (let i = 0; i < result.length; i++) {
+//         if (result[i].isAvailabe === true && result[i].driver.isAvailabe === true) {
+//             arr.push(result[i])
+//         }
+//     }
+//     console.log(arr);
+
+//     return res.json({ messsage: " Ambulance Book success.", result: arr })
+// })
+
+exports.FetchAllAmbulance = asyncHandler(async (req, res) => {
+    res.json({ message: "Dummy Message" })
+})
 exports.bookAmbulance = asyncHandler(async (req, res) => {
-    const { isAccept, time, dropoffLocation, pickUpLocation, date, ambulanceId, driverId } = req.body
-    const { isError, error } = checkEmpty({ time, dropoffLocation, pickUpLocation, ambulanceId, driverId });
+    const { time, dropoffLocation, pickUpLocation } = req.body
+    const arr = []
+    const isFound = await Ambulance.find().populate("driver")
+    for (let i = 0; i < isFound.length; i++) {
+        if (isFound[i].isAvailabe === true && isFound[i].driver.isAvailabe === true) {
+            arr.push(isFound[i])
+
+        }
+
+    }
+    if (arr.length === 0) {
+        return res.status(400).json({ message: "ambulance not found plese wait" })
+    }
+    const { isError, error } = checkEmpty({ time, dropoffLocation, pickUpLocation });
     if (isError) {
         return res.status(400).json({ message: "All Fields Required", error });
     }
 
-    await AmbulanceBooking.create({ time, dropoffLocation, pickUpLocation, date, customerId: req.user, ambulanceId, driverId })
-    await Ambulance.findByIdAndUpdate(ambulanceId, { isAvailabe: false })
-
+    await AmbulanceBooking.create({ time, dropoffLocation, pickUpLocation, customerId: req.user, ambulanceId: arr[0]._id, driverId: arr[0].driver._id })
+    await Ambulance.findByIdAndUpdate(arr[0]._id, { isAvailabe: false })
+    const result = await AmbulanceBooking.find()
+    io.emit("fetch-ambulance-request", result)
     return res.json({ messsage: " Ambulance Book success." })
 })
-exports.FetchAllAmbulance = asyncHandler(async (req, res) => {
-    const arr = []
-    const result = await Ambulance.find().populate("driver")
-    for (let i = 0; i < result.length; i++) {
-        if (result[i].isAvailabe === true && result[i].driver.isAvailabe === true) {
-            arr.push(result[i])
-        }
-    }
-    console.log(arr);
 
-    return res.json({ messsage: " Ambulance Book success.", result: arr })
-})
+
+
 exports.FetchBookedAmbulance = asyncHandler(async (req, res) => {
     const result = await AmbulanceBooking.find({ customerId: req.user }).populate("customerId").populate("ambulanceId")
     return res.json({ messsage: " Ambulance Book success.", result })
