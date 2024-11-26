@@ -380,19 +380,25 @@ exports.cancleAmbulanceBookingbyCustomer = asyncHandler(async (req, res) => {
     await AmbulanceBooking.findByIdAndUpdate(customrId, { status: "cancleByCustomer" })
     return res.json({ messsage: "update Ambulance Facilities success." })
 })
-// exports.bookAmbulance = asyncHandler(async (req, res) => {
-//     const { isAccept, time, dropoffLocation, pickUpLocation, date, ambulanceId, driverId } = req.body
-//     const { isError, error } = checkEmpty({ time, dropoffLocation, pickUpLocation, ambulanceId, driverId });
-//     if (isError) {
-//         return res.status(400).json({ message: "All Fields Required", error });
-//     }
+// hardcorded id 
 
-//     await AmbulanceBooking.create({ time, dropoffLocation, pickUpLocation, date, customerId: req.user, ambulanceId, driverId })
-//     await Ambulance.findByIdAndUpdate(ambulanceId, { isAvailabe: false })
-//     const result = await AmbulanceBooking.find()
-//     io.emit("fetch-ambulance-request", result)
-//     return res.json({ messsage: " Ambulance Book success." })
-// })
+exports.bookAmbulance = asyncHandler(async (req, res) => {
+    const { time, dropoffLocation, pickUpLocation } = req.body
+    const { isError, error } = checkEmpty({ time, dropoffLocation, pickUpLocation });
+    if (isError) {
+        return res.status(400).json({ message: "All Fields Required", error });
+    }
+
+    const isFound = await Ambulance.findOne({ _id: "6740268cfa8ae5d5017b13c7" }).populate("driver")
+
+    await AmbulanceBooking.create({ time, dropoffLocation, pickUpLocation, customerId: req.user, ambulanceId: isFound._id, driverId: isFound.driver._id })
+    await Ambulance.findByIdAndUpdate(isFound._id, { isAvailabe: false })
+    const result = await AmbulanceBooking.find()
+    io.emit("fetch-ambulance-request", result)
+    return res.json({ messsage: " Ambulance Book success." })
+})
+
+
 // exports.FetchAllAmbulance = asyncHandler(async (req, res) => {
 //     const arr = []
 //     const result = await Ambulance.find().populate("driver")
@@ -409,31 +415,34 @@ exports.cancleAmbulanceBookingbyCustomer = asyncHandler(async (req, res) => {
 exports.FetchAllAmbulance = asyncHandler(async (req, res) => {
     res.json({ message: "Dummy Message" })
 })
-exports.bookAmbulance = asyncHandler(async (req, res) => {
-    const { time, dropoffLocation, pickUpLocation } = req.body
-    const arr = []
-    const isFound = await Ambulance.find().populate("driver")
-    for (let i = 0; i < isFound.length; i++) {
-        if (isFound[i].isAvailabe === true && isFound[i].driver.isAvailabe === true) {
-            arr.push(isFound[i])
 
-        }
+// original working code
 
-    }
-    if (arr.length === 0) {
-        return res.status(400).json({ message: "ambulance not found plese wait" })
-    }
-    const { isError, error } = checkEmpty({ time, dropoffLocation, pickUpLocation });
-    if (isError) {
-        return res.status(400).json({ message: "All Fields Required", error });
-    }
+// exports.bookAmbulance = asyncHandler(async (req, res) => {
+//     const { time, dropoffLocation, pickUpLocation } = req.body
+//     const arr = []
+//     const isFound = await Ambulance.find().populate("driver")
+//     for (let i = 0; i < isFound.length; i++) {
+//         if (isFound[i].isAvailabe === true && isFound[i].driver.isAvailabe === true) {
+//             arr.push(isFound[i])
 
-    await AmbulanceBooking.create({ time, dropoffLocation, pickUpLocation, customerId: req.user, ambulanceId: arr[0]._id, driverId: arr[0].driver._id })
-    await Ambulance.findByIdAndUpdate(arr[0]._id, { isAvailabe: false })
-    const result = await AmbulanceBooking.find()
-    io.emit("fetch-ambulance-request", result)
-    return res.json({ messsage: " Ambulance Book success." })
-})
+//         }
+
+//     }
+//     if (arr.length === 0) {
+//         return res.status(400).json({ message: "ambulance not found plese wait" })
+//     }
+//     const { isError, error } = checkEmpty({ time, dropoffLocation, pickUpLocation });
+//     if (isError) {
+//         return res.status(400).json({ message: "All Fields Required", error });
+//     }
+
+//     await AmbulanceBooking.create({ time, dropoffLocation, pickUpLocation, customerId: req.user, ambulanceId: arr[0]._id, driverId: arr[0].driver._id })
+//     await Ambulance.findByIdAndUpdate(arr[0]._id, { isAvailabe: false })
+//     const result = await AmbulanceBooking.find()
+//     io.emit("fetch-ambulance-request", result)
+//     return res.json({ messsage: " Ambulance Book success." })
+// })
 
 
 
