@@ -5,6 +5,7 @@ const MedicalOrder = require("../models/MedicalOrder")
 exports.updateMedical = asyncHandler(async (req, res) => {
     imgeUpload(req, res, async err => {
 
+        // const { medicalId } = req.params
         const { medicalId } = req.params
         const { name, address, city, mobile, email, } = req.body
         const result = await Medical.findById(medicalId)
