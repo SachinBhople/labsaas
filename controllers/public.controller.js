@@ -10,6 +10,7 @@ exports.getAllCustomerPackage = asyncHandler(async (req, res) => {
 })
 exports.getCustomerPackageDetails = asyncHandler(async (req, res) => {
     const { packageId } = req.params
+    // const { packageId } = req.params
     const result = await CustomerPackages.findOne({ _id: packageId })
     const qnaResult = await QnA.find({ package: packageId }).populate("company")
     return res.json({
