@@ -85,6 +85,7 @@ exports.getAllEmployee = asyncHandler(async (req, res) => {
 })
 exports.getEmployeeDetails = asyncHandler(async (req, res) => {
     const { employeeId } = req.params
+
     const result = await Employee.findById(employeeId)
     return res.json({ messsage: "Fetch Employee Details Success Success", result })
 })
