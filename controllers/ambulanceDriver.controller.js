@@ -218,3 +218,4 @@ exports.completeOrder = asyncHandler(async (req, res) => {
     await Ambulance.findByIdAndUpdate(result._id, { isAvailabe: true })
     return res.json({ messsage: "Order Complete success." })
 })
+
